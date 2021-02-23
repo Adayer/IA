@@ -5,23 +5,22 @@ using UnityEngine;
 public class Bala : MonoBehaviour
 {
     [SerializeField] private float m_speed = 10f;
-    [SerializeField] private Transform m_player = null;
     [SerializeField] private float m_maxRotation = 0f;
     [SerializeField] private float m_slowDistance = 0f;
 
-
-    [SerializeField] private Transform m_tracker = null;
 
     private Vector3 m_currentDirection = Vector3.zero;
     private bool m_isChasing = true;
 
     private MeshRenderer m_mesh = null;
 
-    [SerializeField] private RobotsTorreta m_currentObjective = null;
+    private RobotsTorreta m_currentObjective = null;
 
     private Vector3 m_posCurce = Vector3.zero;
 
     private Vector3 m_vectorObjetivo = Vector3.zero;
+
+    public RobotsTorreta CurrentObjective { get => m_currentObjective; set => m_currentObjective = value; }
 
     void Start()
     {
@@ -57,11 +56,19 @@ public class Bala : MonoBehaviour
         float prediction = dist / m_speed;
         
         //Calculo de posición de cruce
-        m_posCurce = m_currentObjective.transform.position + m_currentObjective.CurrentSpeed * m_currentObjective.transform.forward * prediction;
+        m_posCurce = m_currentObjective.transform.position + m_currentObjective.Speed * m_currentObjective.transform.forward * prediction;
 
-        m_posCurce.y = 0f;
-        
         //Calculo de direccion objetivo
         m_vectorObjetivo = m_posCurce - this.transform.position;
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.GetComponent<RobotsTorreta>() == m_currentObjective)
+        {
+            m_currentObjective.DestroyAndSpawn();
+            Destroy(this.gameObject);
+        }
+    }
+
 }

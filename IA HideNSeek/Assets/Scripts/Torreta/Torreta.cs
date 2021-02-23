@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class Torreta : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField] private GameObject m_prefabBullet = null;
+    [SerializeField] private Transform m_spawnPoint = null;
+ 
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -25,5 +26,18 @@ public class Torreta : MonoBehaviour
         }
 
         this.transform.LookAt(mousePos);
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            if(Physics.Raycast(ray, out hit))
+            {
+                if(hit.collider.GetComponentInParent<RobotsTorreta>() != null)
+                {
+                    GameObject newBullet = Instantiate(m_prefabBullet, m_spawnPoint.position, Quaternion.identity);
+                    newBullet.transform.position = new Vector3(newBullet.transform.position.x, 1f, newBullet.transform.position.z);
+                    newBullet.GetComponent<Bala>().CurrentObjective = hit.collider.GetComponentInParent<RobotsTorreta>();
+                }                
+            }
+        }
     }
 }
