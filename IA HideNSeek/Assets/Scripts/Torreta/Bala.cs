@@ -11,8 +11,7 @@ public class Bala : MonoBehaviour
 
     private Vector3 m_currentDirection = Vector3.zero;
     private bool m_isChasing = true;
-
-    private MeshRenderer m_mesh = null;
+	
 
     private RobotsTorreta m_currentObjective = null;
 
@@ -25,7 +24,6 @@ public class Bala : MonoBehaviour
     void Start()
     {
         m_currentDirection = m_currentObjective.transform.position - this.transform.position;
-        m_mesh = this.GetComponent<MeshRenderer>();
     }
 
     void Update()
@@ -35,6 +33,7 @@ public class Bala : MonoBehaviour
         Move();
 
         Debug.DrawRay(this.transform.position, m_currentDirection, Color.red);
+        Debug.DrawRay(this.transform.position, m_vectorObjetivo, Color.blue);
     }
 
     private void Move()
@@ -46,7 +45,7 @@ public class Bala : MonoBehaviour
 
         //Move
         this.transform.position += m_currentDirection * Time.deltaTime * m_speed;
-        this.transform.forward = Vector3.Normalize(m_currentDirection);
+        this.transform.forward = m_currentDirection;
 
     }
 

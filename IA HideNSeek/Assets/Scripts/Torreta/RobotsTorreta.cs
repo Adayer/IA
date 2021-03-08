@@ -67,31 +67,37 @@ public class RobotsTorreta : MonoBehaviour
         }
         else
         {
-            Vector3 vectorDestino = Vector3.Normalize(obstacleAvoidedPos - this.transform.position);
+            Vector3 vectorDestino = obstacleAvoidedPos;
             //Interplar current direction y direccion destino
             m_currentDirection = Vector3.MoveTowards(m_currentDirection, vectorToCheck, m_maxRotation * Time.deltaTime);
-            Debug.DrawRay(this.transform.position, m_currentDirection, Color.red);
-            Debug.DrawRay(this.transform.position, vectorToCheck, Color.blue);
+
+			Debug.DrawRay(this.transform.position, m_currentDirection, Color.red);
 
             //Move
             m_currentDirection.Normalize();
             this.transform.position += m_currentDirection * Time.deltaTime * m_speed;
 
-            this.transform.forward = Vector3.Normalize(m_currentDirection);
+            this.transform.forward = m_currentDirection;
 
             switch (m_currentState)
             {
                 case States.Patrol:
                     {
-                        if (!Physics.Raycast(this.transform.position, m_path.PathPoints[m_currentIndex].position - this.transform.position))
+                        if (!Physics.Raycast(this.transform.position, m_path.PathPoints[m_currentIndex].position - this.transform.position, m_distanceToCheckWalls))
                         {
                             m_avoindingWall = false;
                         }
+
+						Vector3 dir = m_path.PathPoints[m_currentIndex].position - this.transform.position;
+						dir.Normalize();
+						dir = dir * m_distanceToCheckWalls;
+
+						Debug.DrawLine(this.transform.position, dir + this.transform.position , Color.red);
                     }
                     break;
                 case States.Escaping:
                     {
-                        if (!Physics.Raycast(this.transform.position, -(m_bullet.position - this.transform.position)))
+                        if (!Physics.Raycast(this.transform.position, (this.transform.position - m_bullet.position)))
                         {
                             m_avoindingWall = false;
                         }
@@ -112,11 +118,15 @@ public class RobotsTorreta : MonoBehaviour
             if(hit.collider.tag == "Obstacle")
             {
                 m_avoindingWall = true;
+
                 vectorToCheck = this.transform.forward;
+
                 normalOfVector = new Vector3(hit.normal.z, hit.normal.y, -hit.normal.x);
                 normalOfVector.Normalize();
+
                 Vector3 tempVNeg = vectorToCheck - normalOfVector * 0.5f;
                 Vector3 tempVPos = vectorToCheck + normalOfVector * 0.5f;
+
                 bool whileCheck = true;
                 while(whileCheck)
                 {
@@ -144,9 +154,8 @@ public class RobotsTorreta : MonoBehaviour
                     }
                 }
                 vectorToCheck.Normalize();
-                obstacleAvoidedPos = this.transform.position + (vectorToCheck * m_distanceToCheckWalls);
+                obstacleAvoidedPos = vectorToCheck;
                 
-                Debug.DrawRay(this.transform.position, vectorToCheck, Color.blue, 5f);               
             }
         }
     }
@@ -170,7 +179,7 @@ public class RobotsTorreta : MonoBehaviour
 
         //Calculo de destino
         Vector3 vectorDestino = Vector3.Normalize(m_path.PathPoints[m_currentIndex].position - this.transform.position);
-        Debug.DrawRay(this.transform.position, vectorDestino, Color.green);
+        Debug.DrawRay(this.transform.position, vectorDestino * 10f, Color.blue);
 
         //Interplar current direction y direccion destino
         m_currentDirection = Vector3.MoveTowards(m_currentDirection, vectorDestino, m_maxRotation * Time.deltaTime);
@@ -178,31 +187,29 @@ public class RobotsTorreta : MonoBehaviour
         m_currentDirection.Normalize();
         this.transform.position += m_currentDirection * Time.deltaTime * m_speed;
 
-        this.transform.forward = Vector3.Normalize(m_currentDirection);
+        this.transform.forward = m_currentDirection;
     }
 
     private void Escaping()
     {
         //Calculo de destino
-        Vector3 vectorDestino = Vector3.Normalize(m_bullet.position - this.transform.position);
-        vectorDestino = -vectorDestino;
+        Vector3 vectorDestino = Vector3.Normalize(this.transform.position - m_bullet.position);
 
-        Debug.DrawRay(this.transform.position, vectorDestino, Color.blue);
+        Debug.DrawRay(this.transform.position, vectorDestino * 10f, Color.blue);
         //Interplar current direction y direccion destino
         m_currentDirection = Vector3.MoveTowards(m_currentDirection, vectorDestino, m_maxRotation * Time.deltaTime);
         //Move
         m_currentDirection.Normalize();
         this.transform.position += m_currentDirection * Time.deltaTime * m_speed;
 
-        this.transform.forward = Vector3.Normalize(m_currentDirection);
+        this.transform.forward = m_currentDirection;
     }
 
     public void DestroyAndSpawn()
     {
         this.transform.position = m_positionToRespawnIn.position;           
+        m_currentIndex = 0;        
         m_currentState = States.Patrol;
-        m_currentIndex = 0;
-        
     }
 
     private void OnTriggerEnter(Collider other)

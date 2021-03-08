@@ -52,14 +52,14 @@ public class PillaPillaBehaviour : MonoBehaviour
         }
 
         this.transform.position += m_currentDirection * Time.deltaTime * currentSpeed;
-         
-        Debug.DrawRay(this.transform.position, m_currentDirection, Color.red, 1f);
+        this.transform.forward = m_currentDirection;
 
-        this.transform.forward = Vector3.Normalize(m_currentDirection);
+		Debug.DrawLine(this.transform.position, this.transform.position + m_currentDirection * 10f , Color.red);
+		Debug.DrawLine(this.transform.position, this.transform.position + vectorDestino * 10f , Color.blue);
+		
 
-        
 
-        if (Input.GetKeyDown(KeyCode.Space))
+		if (Input.GetKeyDown(KeyCode.Space))
         {
             PillarEscapar();
         }

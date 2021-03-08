@@ -13,7 +13,7 @@ public class Teleporter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.X))
+        if (Input.GetKeyDown(KeyCode.S))
         {
             this.transform.position = this.transform.position + new Vector3(0f, 0f, -10f);
         }
