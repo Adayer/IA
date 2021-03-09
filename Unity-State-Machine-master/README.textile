@@ -1,0 +1,73 @@
+h1. A Finite State Machine architecture for Unity
+
+This repository contains a simple architecture for a Finite State Machine in Unity
+
+h2. Concept
+
+In this state machine, a state is conceptualised as a set of components. When entering the state these components are initialised and when leaving the state these components are destroyed. So a change in state occurs through the change in the components on the game object.
+
+By using standard Unity components for the states the full component lifecycle can be used within each state. Start can be used when entering the state, Update, LateUpdate, FixedUpdate etc. can be used during the state, and OnDestroy can be used when leaving the state.
+
+h2. Core classes
+
+There are two scripts for the component.
+
+The StateMachine component is the component for the state machine. Add it to a game object to create a state machine.
+
+The StateMachineEditor script controls how the inspector for the StateMachine component looks and behaves.
+
+Copy the StateMachine folder to add both scripts to your project.
+
+All the other assets in this project are for an example scene that uses the state machine.
+
+h2. StateMachine
+
+The StateMachine contains a public array of states. Each state is identified by its name, which is a string that you choose for each state.
+
+Each state contains one or more components which are the components for that state. The components should be added to the game object and configured as necessary, then added to the appropriate states.
+
+A component may be in more than one state and a state may contain more than one component.
+
+The components don't have to be on the same game object as the state machine but they usually will be. When entering a state the components will be added to whichever game object they were initially attached to.
+
+h2. Changing State
+
+The StateMachine class contains a public method called ChangeState which takes a single string as the parameter. The string should be the name of a state. When called, the current state will be exited and the state with the given name will be entered.
+
+pre.  public void ChangeState( string stateName )
+
+If the state machine is already in the indicated state or the indicated state does not exist then nothing will happen.
+
+h2. Technical
+
+To maintain the data within a state when leaving the state and returning to it later, each component in a state is serialised when exiting the state and deserialised again when entering the state.
+
+However, due to the way Unity manages the component lifecycle the serialisation happens before the OnDisable and OnDestroy methods are called, so the OnDestroy method can't be used to modify properties of the state component and retain those changes for the next time the state is entered.
+
+Similarly, Awake and OnEnable are called before the component data has been deserialised so the serialised state should not be used in these methods. The component is fully initialised and deserialised when the Start method is called so this is the best method to use for activity when entering the state.
+
+Components must already be present within the scene. When the scene starts all components in each state are serialised and destroyed. The components for the initial state are then deserialised and added back to the game object.
+
+When changing between states, if a component is included in both the state that is being exited and the state that is being entered then it is not removed and re-added to the game object.
+
+h2. Example
+
+The project includes an extremely simple example with an animated character and two states. In the idle state the character just standes around doing nothing. In the patrol state he walks back and forth between two patrol points. There are two buttons for changing between the states.
+
+h2. Source Code
+
+* https://github.com/richardlord/Unity-State-Machine
+
+h2. License
+
+Author: Richard Lord
+Copyright (c) Richard Lord 2015
+http://www.richardlord.net
+
+Licence Agreement (The MIT License)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
