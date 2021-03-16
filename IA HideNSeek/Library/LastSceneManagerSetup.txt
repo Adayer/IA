@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Scripts/StateMachine/Assets/Example/Scene.unity
+- path: C:/Users/andres.perez/Desktop/fluid-behavior-tree-master/Assets/Samples/TreeSample.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0
