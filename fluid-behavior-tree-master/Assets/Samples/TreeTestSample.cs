@@ -11,16 +11,16 @@ namespace CleverCrow.Fluid.BTs.Samples {
         [SerializeField]
         private BehaviorTree _treeA;
 
-        [SerializeField]
-        private BehaviorTree _treeB;
+        //[SerializeField]
+        //private BehaviorTree _treeB;
 
         private ActionBase cosa;
 
-        [SerializeField]
-        private BehaviorTree _treeC;
+        //[SerializeField]
+        //private BehaviorTree _treeC;
 
-        [SerializeField]
-        private bool _condition = false;
+        //[SerializeField]
+        //private bool _condition = false;
 
         [SerializeField] private bool m_estaCerca = false;
         [SerializeField] private bool m_soyHarry = false;
@@ -28,6 +28,7 @@ namespace CleverCrow.Fluid.BTs.Samples {
 
         private void Awake () {
             _treeA = new BehaviorTreeBuilder(gameObject)
+            .Selector()
                 .Sequence()
                     .Condition("Esta cerca?", () => m_estaCerca)
                     .Selector()
@@ -46,12 +47,22 @@ namespace CleverCrow.Fluid.BTs.Samples {
                         })
                     .End()
                 .End()
-                .Do("Corro", () =>
-                {
-                    print("A correr");
-                    return TaskStatus.Success;
-                })
-                .Build();
+                    .Selector()
+                        .Sequence()
+                            .Condition("Soy Harry", () => m_soyHarry)
+                            .Do("Grito", () => {
+                                print("AAAAAAAAAAAAAAAH!");
+                                return TaskStatus.Success;
+                            })
+                        .End()
+                        .Do("Corro", () =>
+                        {
+                            print("A correr");
+                            return TaskStatus.Success;
+                        })
+                    .End()
+            .End()
+            .Build();
             //_treeA = new BehaviorTreeBuilder(gameObject)
             //    .Sequence()
             //        .Condition("Peter", () => _condition)                    
