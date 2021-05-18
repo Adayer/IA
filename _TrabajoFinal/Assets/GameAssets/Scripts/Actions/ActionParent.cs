@@ -10,5 +10,5 @@ public abstract class ActionParent : MonoBehaviour
         CombatManager.Instance.Player.ChooseAction(this, tipoAccion);
     }
 
-    public abstract IEnumerator Effect();
+    public abstract IEnumerator Effect(TrainerParent trainer);
 }

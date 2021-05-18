@@ -27,42 +27,42 @@ namespace CleverCrow.Fluid.BTs.Samples {
 
 
         private void Awake () {
-            _treeA = new BehaviorTreeBuilder(gameObject)
-            .Selector()
-                .Sequence()
-                    .Condition("Esta cerca?", () => m_estaCerca)
-                    .Selector()
-                        .Sequence()
-                            .Condition("Soy Harry", () => m_soyHarry)
-                            .Do("Expelliermus", () =>
-                            {
-                                print("Expelliermus");
-                                return TaskStatus.Success;
-                            })
-                        .End()
-                        .Do("Soy util", () =>
-                        {
-                            print("Lanzo un hechizo util");
-                            return TaskStatus.Success;
-                        })
-                    .End()
-                .End()
-                    .Selector()
-                        .Sequence()
-                            .Condition("Soy Harry", () => m_soyHarry)
-                            .Do("Grito", () => {
-                                print("AAAAAAAAAAAAAAAH!");
-                                return TaskStatus.Success;
-                            })
-                        .End()
-                        .Do("Corro", () =>
-                        {
-                            print("A correr");
-                            return TaskStatus.Success;
-                        })
-                    .End()
-            .End()
-            .Build();
+            //_treeA = new BehaviorTreeBuilder(gameObject)
+            //.Selector()
+            //    .Sequence()
+            //        .Condition("Esta cerca?", () => m_estaCerca)
+            //        .Selector()
+            //            .Sequence()
+            //                .Condition("Soy Harry", () => m_soyHarry)
+            //                .Do("Expelliermus", () =>
+            //                {
+            //                    print("Expelliermus");
+            //                    return TaskStatus.Success;
+            //                })
+            //            .End()
+            //            .Do("Soy util", () =>
+            //            {
+            //                print("Lanzo un hechizo util");
+            //                return TaskStatus.Success;
+            //            })
+            //        .End()
+            //    .End()
+            //        .Selector()
+            //            .Sequence()
+            //                .Condition("Soy Harry", () => m_soyHarry)
+            //                .Do("Grito", () => {
+            //                    print("AAAAAAAAAAAAAAAH!");
+            //                    return TaskStatus.Success;
+            //                })
+            //            .End()
+            //            .Do("Corro", () =>
+            //            {
+            //                print("A correr");
+            //                return TaskStatus.Success;
+            //            })
+            //        .End()
+            //.End()
+            //.Build();
             //_treeA = new BehaviorTreeBuilder(gameObject)
             //    .Sequence()
             //        .Condition("Peter", () => _condition)                    

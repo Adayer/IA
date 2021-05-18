@@ -13,8 +13,8 @@ namespace CleverCrow.Fluid.BTs.Samples
         [SerializeField]
         private BehaviorTree _trainerIA;
 
-        [SerializeField] private bool m_estaCerca = false;
-        [SerializeField] private bool m_soyHarry = false;
+        //[SerializeField] private bool m_estaCerca = false;
+        //[SerializeField] private bool m_soyHarry = false;
 
 
         private void Awake()

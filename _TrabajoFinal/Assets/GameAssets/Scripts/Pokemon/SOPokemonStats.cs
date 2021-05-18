@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
+[CreateAssetMenu(fileName = "New pokemon", menuName = "Pokemon", order = 1)]
 public class SOPokemonStats : ScriptableObject
 {
     public string _name;
@@ -18,8 +19,8 @@ public class SOPokemonStats : ScriptableObject
 
     public Sprite _sprite;
 
-    public TMParent _tm1;
-    public TMParent _tm2;
-    public TMParent _tm3;
-    public TMParent _tm4;
+    public TMSO _tm1;
+    public TMSO _tm2;
+    public TMSO _tm3;
+    public TMSO _tm4;
 }

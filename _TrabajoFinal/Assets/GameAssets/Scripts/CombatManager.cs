@@ -5,24 +5,17 @@ using CleverCrow.Fluid.BTs.Samples;
 
 public class CombatManager : PersistentSingleton<CombatManager>
 {
-
-    private enum PhaseOfBattle { Start, PickingAction, SettingUpOrder, Acting}
-
-    private PhaseOfBattle m_currentPhase = PhaseOfBattle.Start;
-
     public enum ActionType { Attack, UseItem, SwapPokemon}
 
     [SerializeField] private TrainerParent m_player;
 
     private EnemyTrainerIA m_enemy;
 
-    private int trainersReady = 0;
-
-
     public TrainerParent trainerThatActsFirst;
     public TrainerParent trainerThatActsSecond;
 
     public TrainerParent Player { get => m_player;}
+    public EnemyTrainerIA Enemy { get => m_enemy; set => m_enemy = value; }
 
     public void HasPicked()
     {
@@ -35,9 +28,9 @@ public class CombatManager : PersistentSingleton<CombatManager>
     {
         //Change UI
         yield return new WaitForSeconds(1f);
-        trainerThatActsFirst.ActionChosen.StartCoroutine(trainerThatActsFirst.ActionChosen.Effect());
+        trainerThatActsFirst.ActionChosen.StartCoroutine(trainerThatActsFirst.ActionChosen.Effect(trainerThatActsFirst));
         yield return new WaitForSeconds(1f);
-        trainerThatActsSecond.ActionChosen.StartCoroutine(trainerThatActsSecond.ActionChosen.Effect());
+        trainerThatActsSecond.ActionChosen.StartCoroutine(trainerThatActsSecond.ActionChosen.Effect(trainerThatActsSecond));
         yield return new WaitForSeconds(1f);
         //Show UI Again
 
@@ -46,7 +39,7 @@ public class CombatManager : PersistentSingleton<CombatManager>
     public void SetUpOrder()
     {
         trainerThatActsFirst = null;
-        trainerThatActsFirst = null;
+        trainerThatActsSecond = null;
 
         switch (m_player.TypeOfActionChosen)
         {

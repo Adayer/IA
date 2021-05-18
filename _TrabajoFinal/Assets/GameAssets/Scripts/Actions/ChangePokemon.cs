@@ -4,9 +4,13 @@ using UnityEngine;
 
 public class ChangePokemon : ActionParent
 {
-    public override IEnumerator Effect()
+    [SerializeField] private PokemonParent pokemon;
+    public override IEnumerator Effect(TrainerParent trainer)
     {
-        Debug.LogError("Cambio pkmn no configurado");
-        yield return null;
+        print(trainer.CurrentPokemonPicked.Name + " vuelve aquí.");
+        yield return new WaitForSeconds(0.5f);
+        print(trainer.CurrentPokemonPicked.Name + " te elijo a ti!");
+        trainer.CurrentPokemonPicked = pokemon;
+        trainer.UpdatePickedPokemon(pokemon);
     }
 }
