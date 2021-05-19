@@ -269,6 +269,7 @@ GameObject:
   - component: {fileID: 162607808}
   - component: {fileID: 162607807}
   - component: {fileID: 162607806}
+  - component: {fileID: 162607809}
   m_Layer: 5
   m_Name: Button (5)
   m_TagString: Untagged
@@ -338,7 +339,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 162607807}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 162607809}
+        m_TargetAssemblyTypeName: ActionParent, Assembly-CSharp
+        m_MethodName: Act
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &162607807
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -377,6 +390,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 162607804}
   m_CullTransparentMesh: 0
+--- !u!114 &162607809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 162607804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67cf903775b463a41b40c9267ba43cf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tipoAccion: 2
+  pokemon: {fileID: 0}
 --- !u!1 &207571761
 GameObject:
   m_ObjectHideFlags: 0
@@ -908,6 +935,7 @@ GameObject:
   - component: {fileID: 483683334}
   - component: {fileID: 483683333}
   - component: {fileID: 483683332}
+  - component: {fileID: 483683335}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -977,7 +1005,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 483683333}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 162607809}
+        m_TargetAssemblyTypeName: ActionParent, Assembly-CSharp
+        m_MethodName: Act
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &483683333
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1016,6 +1056,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 483683330}
   m_CullTransparentMesh: 0
+--- !u!114 &483683335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 483683330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67cf903775b463a41b40c9267ba43cf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tipoAccion: 2
+  pokemon: {fileID: 0}
 --- !u!1 &533478364
 GameObject:
   m_ObjectHideFlags: 0
@@ -1192,6 +1246,7 @@ GameObject:
   - component: {fileID: 652686254}
   - component: {fileID: 652686253}
   - component: {fileID: 652686252}
+  - component: {fileID: 652686255}
   m_Layer: 5
   m_Name: Button (3)
   m_TagString: Untagged
@@ -1261,7 +1316,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 652686253}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 162607809}
+        m_TargetAssemblyTypeName: ActionParent, Assembly-CSharp
+        m_MethodName: Act
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &652686253
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1300,6 +1367,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 652686250}
   m_CullTransparentMesh: 0
+--- !u!114 &652686255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 652686250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67cf903775b463a41b40c9267ba43cf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tipoAccion: 2
+  pokemon: {fileID: 0}
 --- !u!1 &665768889
 GameObject:
   m_ObjectHideFlags: 0
@@ -1658,6 +1739,7 @@ GameObject:
   - component: {fileID: 743610884}
   - component: {fileID: 743610883}
   - component: {fileID: 743610882}
+  - component: {fileID: 743610885}
   m_Layer: 5
   m_Name: Button (1)
   m_TagString: Untagged
@@ -1727,7 +1809,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 743610883}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 162607809}
+        m_TargetAssemblyTypeName: ActionParent, Assembly-CSharp
+        m_MethodName: Act
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &743610883
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1766,6 +1860,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 743610880}
   m_CullTransparentMesh: 0
+--- !u!114 &743610885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 743610880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67cf903775b463a41b40c9267ba43cf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tipoAccion: 2
+  pokemon: {fileID: 0}
 --- !u!1 &775299248
 GameObject:
   m_ObjectHideFlags: 0
@@ -2166,6 +2274,7 @@ GameObject:
   - component: {fileID: 1200854015}
   - component: {fileID: 1200854014}
   - component: {fileID: 1200854013}
+  - component: {fileID: 1200854016}
   m_Layer: 5
   m_Name: Button (2)
   m_TagString: Untagged
@@ -2235,7 +2344,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1200854014}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 162607809}
+        m_TargetAssemblyTypeName: ActionParent, Assembly-CSharp
+        m_MethodName: Act
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1200854014
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2274,6 +2395,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1200854011}
   m_CullTransparentMesh: 0
+--- !u!114 &1200854016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1200854011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67cf903775b463a41b40c9267ba43cf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tipoAccion: 2
+  pokemon: {fileID: 0}
 --- !u!1 &1240002606
 GameObject:
   m_ObjectHideFlags: 0
@@ -2514,10 +2649,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 657776b4ed9363a44a827e3effdbb6fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_pokemonTeam: []
   isPlayer: 1
   m_imgPickedPokemon: {fileID: 2107202955}
   m_parentMovePicker: {fileID: 665768889}
+  m_parentPokemonPicker: {fileID: 0}
 --- !u!4 &1283165983
 Transform:
   m_ObjectHideFlags: 0
@@ -3386,10 +3521,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf19406540a9e9e4d91e71d3b2ef2645, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_pokemonTeam: []
   isPlayer: 0
   m_imgPickedPokemon: {fileID: 207571763}
   m_parentMovePicker: {fileID: 0}
+  m_parentPokemonPicker: {fileID: 0}
 --- !u!4 &1952594085
 Transform:
   m_ObjectHideFlags: 0
@@ -3416,6 +3551,7 @@ GameObject:
   - component: {fileID: 2058138486}
   - component: {fileID: 2058138485}
   - component: {fileID: 2058138484}
+  - component: {fileID: 2058138487}
   m_Layer: 5
   m_Name: Button (4)
   m_TagString: Untagged
@@ -3485,7 +3621,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2058138485}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 162607809}
+        m_TargetAssemblyTypeName: ActionParent, Assembly-CSharp
+        m_MethodName: Act
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2058138485
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3524,6 +3672,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2058138482}
   m_CullTransparentMesh: 0
+--- !u!114 &2058138487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2058138482}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67cf903775b463a41b40c9267ba43cf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tipoAccion: 2
+  pokemon: {fileID: 0}
 --- !u!1 &2059562167
 GameObject:
   m_ObjectHideFlags: 0

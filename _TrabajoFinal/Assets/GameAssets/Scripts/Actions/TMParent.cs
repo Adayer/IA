@@ -22,8 +22,9 @@ public class TMParent : ActionParent
             if(trainer == CombatManager.Instance.Player)
             {
                 float stabMod = 1f;
+                //HACER QUE EL DAÑO SE CALCULE POR METODOS y TERMINAR FORMULA
                 float dmg = m_damage * (trainer.CurrentPokemonPicked.Attack/CombatManager.Instance.Enemy.CurrentPokemonPicked.Defense)
-                    * stabMod * Random.Range(0.85f, 1f) ;//TERMINAR formula
+                    * stabMod * Random.Range(0.85f, 1f);
                 CombatManager.Instance.Enemy.CurrentPokemonPicked.DealDamage(dmg);
             }
             else

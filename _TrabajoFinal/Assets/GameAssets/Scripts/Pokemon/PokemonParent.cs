@@ -33,25 +33,15 @@ public class PokemonParent : MonoBehaviour
     public TMParent Tm2 { get => m_tm2; set => m_tm2 = value; }
     public TMParent Tm3 { get => m_tm3; set => m_tm3 = value; }
     public TMParent Tm4 { get => m_tm4; set => m_tm4 = value; }
+
+
     public int Attack { get => m_attack; set => m_attack = value; }
     public int Defense { get => m_defense; set => m_defense = value; }
     public int SpAtt { get => m_spAtt; set => m_spAtt = value; }
     public int SpDef { get => m_spDef; set => m_spDef = value; }
     public int Speed1 { get => m_speed; set => m_speed = value; }
+    public int CurrentHP { get => m_currentHP; set => m_currentHP = value; }
 
-    public void LoseLife()
-    {
-
-    }
-
-    public TMParent CalculateBestMove()
-    {
-        TMParent bestMove = null;
-
-
-
-        return bestMove;
-    }
     public void SetProperties(SOPokemonStats pkmData)
     {
         m_name = pkmData._name;
@@ -65,28 +55,44 @@ public class PokemonParent : MonoBehaviour
         m_speed = pkmData._speed;
         m_sprite = pkmData._sprite;
 
-        GameObject newTM1= Instantiate(new GameObject(), Vector3.zero, Quaternion.identity, this.transform);
+        GameObject newTM1= Instantiate(new GameObject("TM"), Vector3.zero, Quaternion.identity, this.transform);
         m_tm1 = newTM1.AddComponent<TMParent>();
         m_tm1.SetProperties(pkmData._tm1);
         newTM1.name = m_tm1.Name;
 
-        GameObject newTM2 = Instantiate(new GameObject(), Vector3.zero, Quaternion.identity, this.transform);
+        GameObject newTM2 = Instantiate(new GameObject("TM"), Vector3.zero, Quaternion.identity, this.transform);
         m_tm2 = newTM2.AddComponent<TMParent>();
         m_tm2.SetProperties(pkmData._tm2);
         newTM2.name = m_tm2.Name;
 
-        GameObject newTM3 = Instantiate(new GameObject(), Vector3.zero, Quaternion.identity, this.transform);
+        GameObject newTM3 = Instantiate(new GameObject("TM"), Vector3.zero, Quaternion.identity, this.transform);
         m_tm3 = newTM3.AddComponent<TMParent>();
         m_tm3.SetProperties(pkmData._tm3);
         newTM3.name = m_tm3.Name;
 
-        GameObject newTM4 = Instantiate(new GameObject(), Vector3.zero, Quaternion.identity, this.transform);
+        GameObject newTM4 = Instantiate(new GameObject("TM"), Vector3.zero, Quaternion.identity, this.transform);
         m_tm4 = newTM4.AddComponent<TMParent>();
         m_tm4.SetProperties(pkmData._tm4);
         newTM4.name = m_tm4.Name;
     }
 
-    public void DealDamage (float amount)
+    public void SubscribirTMs()
+    {
+        CombatManager.Instance.Player.OnTM1 += Tm1.Act;
+        CombatManager.Instance.Player.OnTM2 += Tm2.Act;
+        CombatManager.Instance.Player.OnTM3 += Tm3.Act;
+        CombatManager.Instance.Player.OnTM4 += Tm4.Act;
+    }
+
+    public void DesubscribirTMs()
+    {
+        CombatManager.Instance.Player.OnTM1 -= Tm1.Act;
+        CombatManager.Instance.Player.OnTM2 -= Tm2.Act;
+        CombatManager.Instance.Player.OnTM3 -= Tm3.Act;
+        CombatManager.Instance.Player.OnTM4 -= Tm4.Act;
+    }
+
+    public void DealDamage(float amount)
     {
 
     }
