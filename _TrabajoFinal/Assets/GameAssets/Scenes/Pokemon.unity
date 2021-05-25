@@ -2767,6 +2767,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_player: {fileID: 1283165982}
+  m_enemy: {fileID: 1952594084}
   trainerThatActsFirst: {fileID: 0}
   trainerThatActsSecond: {fileID: 0}
 --- !u!4 &1367926695

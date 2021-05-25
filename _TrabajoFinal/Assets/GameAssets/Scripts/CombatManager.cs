@@ -9,7 +9,7 @@ public class CombatManager : PersistentSingleton<CombatManager>
 
     [SerializeField] private TrainerParent m_player;
 
-    private EnemyTrainerIA m_enemy;
+    [SerializeField] private EnemyTrainerIA m_enemy;
 
     public TrainerParent trainerThatActsFirst;
     public TrainerParent trainerThatActsSecond;

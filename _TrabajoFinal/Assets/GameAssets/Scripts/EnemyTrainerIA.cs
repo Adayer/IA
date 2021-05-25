@@ -16,7 +16,6 @@ namespace CleverCrow.Fluid.BTs.Samples
         //[SerializeField] private bool m_estaCerca = false;
         //[SerializeField] private bool m_soyHarry = false;
 
-
         private void Awake()
         {
             _trainerIA = new BehaviorTreeBuilder(gameObject)
@@ -108,7 +107,10 @@ namespace CleverCrow.Fluid.BTs.Samples
 
         public void Act()
         {
-            _trainerIA.Tick();
+            m_typeOfActionChosen = CombatManager.ActionType.Attack;
+            m_actionChosen = m_currentPickedPokemon.Tm1;
+
+            //_trainerIA.Tick();
         }
     }
 }

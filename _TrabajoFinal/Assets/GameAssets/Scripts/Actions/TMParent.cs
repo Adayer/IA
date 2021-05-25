@@ -19,17 +19,21 @@ public class TMParent : ActionParent
         yield return new WaitForSeconds(0.5f);
         if (CheckIfHit())
         {
+            float stabMod = 1f;
             if(trainer == CombatManager.Instance.Player)
             {
-                float stabMod = 1f;
                 //HACER QUE EL DAÑO SE CALCULE POR METODOS y TERMINAR FORMULA
                 float dmg = m_damage * (trainer.CurrentPokemonPicked.Attack/CombatManager.Instance.Enemy.CurrentPokemonPicked.Defense)
                     * stabMod * Random.Range(0.85f, 1f);
-                CombatManager.Instance.Enemy.CurrentPokemonPicked.DealDamage(dmg);
+                print(dmg);
+                //CombatManager.Instance.Enemy.CurrentPokemonPicked.DealDamage(dmg);
             }
             else
             {
-
+                stabMod = 1f;
+                float dmg = m_damage * (trainer.CurrentPokemonPicked.Attack / CombatManager.Instance.Player.CurrentPokemonPicked.Defense)
+                    * stabMod * Random.Range(0.85f, 1f);
+                print(dmg);
             }
             yield return new WaitForSeconds(0.5f);
         }

@@ -55,22 +55,26 @@ public class PokemonParent : MonoBehaviour
         m_speed = pkmData._speed;
         m_sprite = pkmData._sprite;
 
-        GameObject newTM1= Instantiate(new GameObject("TM"), Vector3.zero, Quaternion.identity, this.transform);
+        GameObject newTM1= new GameObject("TM");
+        newTM1.transform.parent = this.transform;
         m_tm1 = newTM1.AddComponent<TMParent>();
         m_tm1.SetProperties(pkmData._tm1);
         newTM1.name = m_tm1.Name;
 
-        GameObject newTM2 = Instantiate(new GameObject("TM"), Vector3.zero, Quaternion.identity, this.transform);
+        GameObject newTM2 = new GameObject("TM");
+        newTM2.transform.parent = this.transform;
         m_tm2 = newTM2.AddComponent<TMParent>();
         m_tm2.SetProperties(pkmData._tm2);
         newTM2.name = m_tm2.Name;
 
-        GameObject newTM3 = Instantiate(new GameObject("TM"), Vector3.zero, Quaternion.identity, this.transform);
+        GameObject newTM3 = new GameObject("TM");
+        newTM3.transform.parent = this.transform;
         m_tm3 = newTM3.AddComponent<TMParent>();
         m_tm3.SetProperties(pkmData._tm3);
         newTM3.name = m_tm3.Name;
 
-        GameObject newTM4 = Instantiate(new GameObject("TM"), Vector3.zero, Quaternion.identity, this.transform);
+        GameObject newTM4 = new GameObject("TM");
+        newTM4.transform.parent = this.transform;
         m_tm4 = newTM4.AddComponent<TMParent>();
         m_tm4.SetProperties(pkmData._tm4);
         newTM4.name = m_tm4.Name;

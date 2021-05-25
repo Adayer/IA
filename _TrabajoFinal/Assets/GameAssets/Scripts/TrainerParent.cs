@@ -8,9 +8,9 @@ public class TrainerParent : MonoBehaviour
 {
     [Header("Player")]
     private List<PokemonParent> m_pokemonTeam = new List<PokemonParent>(6);
-    private PokemonParent m_currentPickedPokemon;   
-    private ActionParent m_actionChosen;
-    private CombatManager.ActionType m_typeOfActionChosen;
+    protected PokemonParent m_currentPickedPokemon;
+    protected ActionParent m_actionChosen;
+    protected CombatManager.ActionType m_typeOfActionChosen;
     [SerializeField] private bool isPlayer;
 
     [Header("Utilidad")]
@@ -51,7 +51,8 @@ public class TrainerParent : MonoBehaviour
 
         for (int i = 0; i < possiblePokemons.Length; i++)
         {
-            GameObject newPkmn = Instantiate(new GameObject("Pokemon"), Vector3.zero, Quaternion.identity, this.transform);
+            GameObject newPkmn = new GameObject("Pokemon");
+            newPkmn.transform.parent = this.transform;
             PokemonParent cmp = newPkmn.AddComponent<PokemonParent>();
             cmp.SetProperties((SOPokemonStats)possiblePokemons[i]);
             possiblePokemonsList.Add(cmp);
@@ -79,6 +80,9 @@ public class TrainerParent : MonoBehaviour
         Button[] attButtons = m_parentMovePicker.GetComponentsInChildren<Button>();
 
         attButtons[0].onClick.AddListener(TriggerTM1);
+        attButtons[1].onClick.AddListener(TriggerTM2);
+        attButtons[2].onClick.AddListener(TriggerTM3);
+        attButtons[3].onClick.AddListener(TriggerTM4);
     }
     private void LinkPokemonChangeButtons()
     {
@@ -95,14 +99,14 @@ public class TrainerParent : MonoBehaviour
     #endregion
 
     #region TMTriggers
-    private void TriggerTM1() { OnTM1.Invoke(); }
-    private void TriggerTM2() { OnTM2.Invoke(); }
-    private void TriggerTM3() { OnTM3.Invoke(); }
-    private void TriggerTM4() { OnTM4.Invoke(); }
+    private void TriggerTM1() { OnTM1?.Invoke(); }
+    private void TriggerTM2() { OnTM2?.Invoke(); }
+    private void TriggerTM3() { OnTM3?.Invoke(); }
+    private void TriggerTM4() { OnTM4?.Invoke(); }
     #endregion
 
     #region Metodos de acción
-    public void ChooseAction (ActionParent action, CombatManager.ActionType typeOfAction)
+    public void ChooseAction (ActionParent action, CombatManager.ActionType typeOfAction) // Pasar a Clase abstracta
     {
         if(action != null)
         {
@@ -151,8 +155,8 @@ public class TrainerParent : MonoBehaviour
             attButtons[3].GetComponentInChildren<TextMeshProUGUI>().text = newPickedPkmn.Tm4.Name;           
             SetUpColors(attButtons[3].gameObject.GetComponent<Image>(), newPickedPkmn.Tm4);
         }
-    }
-    
+    } // Pasar a Clase abstracta
+
     public void UpdatePokemonTeam()
     {
         Button[] pkmButtons = m_parentPokemonPicker.GetComponentsInChildren<Button>();
@@ -170,7 +174,7 @@ public class TrainerParent : MonoBehaviour
 
             pkmButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = m_pokemonTeam[i].Name;
         }
-    }
+    } // Pasar a Clase abstracta
     #endregion
 
     #region Metodos de Utilidad
