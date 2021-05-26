@@ -6,7 +6,7 @@ public class AppConstants
 {
     public enum TipoPokemon
     {
-        Normal, Fire, Water, Grass
+        Fire, Water, Grass, Normal
     }
 
     public enum TipoDaño

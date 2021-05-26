@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CleverCrow.Fluid.BTs.Samples;
+using System;
+using Random = UnityEngine.Random;
 
 public class CombatManager : PersistentSingleton<CombatManager>
 {
-    public enum ActionType { Attack, UseItem, SwapPokemon}
+    public enum ActionType { Attack, UseItem, SwapPokemon }
 
     [SerializeField] private TrainerParent m_player;
 
@@ -13,10 +15,24 @@ public class CombatManager : PersistentSingleton<CombatManager>
 
     public TrainerParent trainerThatActsFirst;
     public TrainerParent trainerThatActsSecond;
+    [SerializeField] GenericQueue<EnemyTrainerIA> m_enemyTrainerQueue;
+    public TrainerParent Player { get => m_player; }
+    public EnemyTrainerIA Enemy
+    {
+        get => m_enemy;
+        set
+        {
+            m_enemy = value;
+            OnEnemyTrainerChanged?.Invoke(this,new NewTrainerArgs(value));
+        }
+    }
 
-    public TrainerParent Player { get => m_player;}
-    public EnemyTrainerIA Enemy { get => m_enemy; set => m_enemy = value; }
+    float m_totalDamage;
+    public delegate void DamageCalculation(TMParent tmUsed, PokemonParent attackingPokemon, PokemonParent defendingPokemon);
 
+    public DamageCalculation OnCalculateDamage;
+
+    public event EventHandler<NewTrainerArgs> OnEnemyTrainerChanged;
     public void HasPicked()
     {
         m_enemy.Act();
@@ -35,7 +51,81 @@ public class CombatManager : PersistentSingleton<CombatManager>
         //Show UI Again
 
     }
+    private void OnEnable()
+    {
+        OnCalculateDamage += CalculateBaseDamage;
+        OnCalculateDamage += CalculateSTABDamage;
+        OnCalculateDamage += CalculateTypeCounterDamage;
+        OnCalculateDamage += CalculateCritChance;
+        OnCalculateDamage += CalculateMissChance;
+        OnCalculateDamage += DealDamage;
+        OnEnemyTrainerChanged += SetNewEnemyTrainer;
+    }
 
+    private void SetNewEnemyTrainer(object sender, NewTrainerArgs trainerArgs)
+    {
+        //TODO: Limpiar todos los GO pokemon del entrenador anterior?
+        trainerArgs.newEnemyTrainer.InitPokemons();
+    }
+
+    private void OnDisable()
+    {
+        OnCalculateDamage -= CalculateBaseDamage;
+        OnCalculateDamage -= CalculateSTABDamage;
+        OnCalculateDamage -= CalculateTypeCounterDamage;
+        OnCalculateDamage -= CalculateCritChance;
+        OnCalculateDamage -= CalculateMissChance;
+    }
+    private void CalculateBaseDamage(TMParent tmUsed, PokemonParent attackingPokemon, PokemonParent defendingPokemon)
+    {
+        int attackValue;
+        int defenseValue;
+        if (tmUsed.TipoDeDaño == AppConstants.TipoDaño.Fisico)
+        {
+            attackValue = attackingPokemon.Attack;
+            defenseValue = defendingPokemon.Defense;
+        }
+        else
+        {
+            attackValue = attackingPokemon.SpAtt;
+            defenseValue = defendingPokemon.SpDef;
+        }
+        m_totalDamage = Random.Range(0.85f, 1) * tmUsed.Damage * attackValue / defenseValue;
+    }
+
+    private void CalculateSTABDamage(TMParent tmUsed, PokemonParent attackingPokemon, PokemonParent defendingPokemon)
+    {
+        if (attackingPokemon.Type == tmUsed.TipoDeAtaque)
+        {
+            m_totalDamage *= 1.2f;
+        }
+    }
+
+    private void CalculateTypeCounterDamage(TMParent tmUsed, PokemonParent attackingPokemon, PokemonParent defendingPokemon)
+    {
+        m_totalDamage *= PokemonParent.GetTypeDamageMultiplier(attackingPokemon.Type, defendingPokemon.Type);
+    }
+
+    private void CalculateCritChance(TMParent tmUsed, PokemonParent attackingPokemon, PokemonParent defendingPokemon)
+    {
+        if (Random.value * 100 > tmUsed.CritChance)
+        {
+            m_totalDamage *= 1.5f;
+        }
+    }
+
+    private void CalculateMissChance(TMParent tmUsed, PokemonParent attackingPokemon, PokemonParent defendingPokemon)
+    {
+        if (Random.value >= tmUsed.Accuracy)
+        {
+            m_totalDamage = 0;
+        }
+    }
+
+    private void DealDamage(TMParent tmUsed, PokemonParent attackingPokemon, PokemonParent defendingPokemon)
+    {
+        defendingPokemon.TakeDamage(Mathf.FloorToInt(m_totalDamage));
+    }
     public void SetUpOrder()
     {
         trainerThatActsFirst = null;
@@ -128,27 +218,41 @@ public class CombatManager : PersistentSingleton<CombatManager>
 
     void TieBreakIniciativa()
     {
-        if(m_player.CurrentPokemonPicked.Speed > m_enemy.CurrentPokemonPicked.Speed)
+        if (m_player.CurrentPokemonPicked.Speed > m_enemy.CurrentPokemonPicked.Speed)
         {
             trainerThatActsFirst = m_player;
             trainerThatActsSecond = m_enemy;
         }
-        else if(m_player.CurrentPokemonPicked.Speed < m_enemy.CurrentPokemonPicked.Speed)
+        else if (m_player.CurrentPokemonPicked.Speed < m_enemy.CurrentPokemonPicked.Speed)
         {
             trainerThatActsFirst = m_enemy;
             trainerThatActsSecond = m_player;
         }
         else
         {
-            if(Random.value <= 0.5f){
+            if (Random.value <= 0.5f)
+            {
                 trainerThatActsFirst = m_player;
                 trainerThatActsSecond = m_enemy;
             }
-            else{
+            else
+            {
                 trainerThatActsFirst = m_enemy;
                 trainerThatActsSecond = m_player;
             }
         }
+    }
+
+
+    public void EnemyTrainerLost()
+    {
+        Enemy = m_enemyTrainerQueue.QuitarDeLaFila();
+    }
+
+    public void StartCombat()
+    {
+        Player.Initialize();
+        Enemy.Initialize();
     }
 
 }

@@ -31,7 +31,7 @@ public class TrainerParent : MonoBehaviour
     public ActionParent ActionChosen { get => m_actionChosen; }
     public PokemonParent CurrentPokemonPicked { get => m_currentPickedPokemon; set => m_currentPickedPokemon = value; }
 
-    private void Start()
+    public void Initialize()
     {
         InitPokemons();
 
@@ -43,7 +43,7 @@ public class TrainerParent : MonoBehaviour
     }
 
     #region Metodos de inicialización
-    private void InitPokemons()
+    public void InitPokemons()
     {
         object[] possiblePokemons = Resources.LoadAll("Pokemon", typeof(SOPokemonStats));
 

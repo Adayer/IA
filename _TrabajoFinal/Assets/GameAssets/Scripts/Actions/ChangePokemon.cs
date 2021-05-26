@@ -8,13 +8,13 @@ public class ChangePokemon : ActionParent
 
     public PokemonParent Pokemon { get => m_pokemon; set => m_pokemon = value; }
 
-    public override IEnumerator Effect(TrainerParent trainer)
+    public override IEnumerator Effect(TrainerParent attacker)
     {
-        print(trainer.CurrentPokemonPicked.Name + " vuelve aquí.");
+        print(attacker.CurrentPokemonPicked.Name + " vuelve aquí.");
         yield return new WaitForSeconds(0.5f);
-        print(trainer.CurrentPokemonPicked.Name + " te elijo a ti!");
-        trainer.CurrentPokemonPicked = m_pokemon;
-        trainer.UpdatePickedPokemon(m_pokemon);
-        trainer.UpdatePokemonTeam();
+        print(attacker.CurrentPokemonPicked.Name + " te elijo a ti!");
+        attacker.CurrentPokemonPicked = m_pokemon;
+        attacker.UpdatePickedPokemon(m_pokemon);
+        attacker.UpdatePokemonTeam();
     }
 }

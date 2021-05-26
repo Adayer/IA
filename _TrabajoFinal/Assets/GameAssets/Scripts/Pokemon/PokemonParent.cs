@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
 public class PokemonParent : MonoBehaviour
 {
     private string m_name;
 
     private AppConstants.TipoPokemon m_type;
+
+    public Action OnPokemonFainted;
 
     private int m_maxHp;
     private int m_currentHP;
@@ -96,8 +98,74 @@ public class PokemonParent : MonoBehaviour
         CombatManager.Instance.Player.OnTM4 -= Tm4.Act;
     }
 
-    public void DealDamage(float amount)
+    public void TakeDamage(int amount)
     {
+        Debug.LogError(name + " took " + amount +" damage");
+        CurrentHP -= amount;
+        if(CurrentHP <= 0)
+        {
+            Faint();
+        }
+    }
 
+    public void Faint()
+    {
+        Debug.LogError(name + " fainted");
+        OnPokemonFainted?.Invoke();
+    }
+
+    public static float GetTypeDamageMultiplier(AppConstants.TipoPokemon attackType, AppConstants.TipoPokemon defenderType)
+    {
+        float damageMultiplier = 1;
+
+        if (attackType == AppConstants.TipoPokemon.Normal || defenderType == AppConstants.TipoPokemon.Normal)
+            return damageMultiplier;
+
+        if ((int)(attackType) == Mod(((int)defenderType - 1), 3))
+        {
+            damageMultiplier = 0.5f;
+        }
+        else if ((int)attackType == ((int)defenderType + 1) % 3)
+        {
+            damageMultiplier = 2f;
+        }
+        else if (attackType == defenderType)
+            damageMultiplier = 0.5f;
+
+        return damageMultiplier;
+    }
+    static int Mod(int x, int m)
+    {
+        return (x % m + m) % m;
+    }
+
+
+    public static void DebugTypeEffectiveness()
+    {
+        Debug.LogError("=========THEORETICALLY INEFFECTIVE============");
+        Debug.LogError("Fire vs Water: " + GetTypeDamageMultiplier(AppConstants.TipoPokemon.Fire, AppConstants.TipoPokemon.Water));
+        Debug.LogError("Water vs Grass: " + GetTypeDamageMultiplier(AppConstants.TipoPokemon.Water, AppConstants.TipoPokemon.Grass));
+        Debug.LogError("Grass vs Fire: " + GetTypeDamageMultiplier(AppConstants.TipoPokemon.Grass, AppConstants.TipoPokemon.Fire));
+
+        Debug.LogError("=========THEORETICALLY EFFECTIVE============");
+        Debug.LogError("Fire vs Grass: " + GetTypeDamageMultiplier(AppConstants.TipoPokemon.Fire, AppConstants.TipoPokemon.Grass));
+        Debug.LogError("Water vs Fire: " + GetTypeDamageMultiplier(AppConstants.TipoPokemon.Water, AppConstants.TipoPokemon.Fire));
+        Debug.LogError("Grass vs Water: " + GetTypeDamageMultiplier(AppConstants.TipoPokemon.Grass, AppConstants.TipoPokemon.Water));
+
+        Debug.LogError("=========NORMAL VS TYPE============");
+        Debug.LogError("Normal vs Grass: " + GetTypeDamageMultiplier(AppConstants.TipoPokemon.Normal, AppConstants.TipoPokemon.Grass));
+        Debug.LogError("Normal vs Fire: " + GetTypeDamageMultiplier(AppConstants.TipoPokemon.Normal, AppConstants.TipoPokemon.Fire));
+        Debug.LogError("Normal vs Water: " + GetTypeDamageMultiplier(AppConstants.TipoPokemon.Normal, AppConstants.TipoPokemon.Water));
+
+        Debug.LogError("=========TYPE VS NORMAL============");
+        Debug.LogError("Grass vs Normal: " + GetTypeDamageMultiplier(AppConstants.TipoPokemon.Grass, AppConstants.TipoPokemon.Normal));
+        Debug.LogError("Water vs Normal: " + GetTypeDamageMultiplier(AppConstants.TipoPokemon.Water, AppConstants.TipoPokemon.Normal));
+        Debug.LogError("Fire vs Normal: " + GetTypeDamageMultiplier(AppConstants.TipoPokemon.Fire, AppConstants.TipoPokemon.Normal));
+
+        Debug.LogError("=========TYPE VS SELF============");
+        Debug.LogError("Grass vs Grass: " + GetTypeDamageMultiplier(AppConstants.TipoPokemon.Grass, AppConstants.TipoPokemon.Grass));
+        Debug.LogError("Water vs Water: " + GetTypeDamageMultiplier(AppConstants.TipoPokemon.Water, AppConstants.TipoPokemon.Water));
+        Debug.LogError("Fire vs Fire: " + GetTypeDamageMultiplier(AppConstants.TipoPokemon.Fire, AppConstants.TipoPokemon.Fire));
+        Debug.LogError("Normal vs Normal: " + GetTypeDamageMultiplier(AppConstants.TipoPokemon.Normal, AppConstants.TipoPokemon.Normal));
     }
 }

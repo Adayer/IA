@@ -8,6 +8,7 @@ public class TMSO : ScriptableObject
     public AppConstants.TipoPokemon _tipoDeAtaque;
     public AppConstants.TipoDaño _tipoDeDaño;
     public int _accuracy;
+    public float _critChance;
     public int _damage;
     public string _name;
 }
