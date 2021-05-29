@@ -23,6 +23,7 @@ public class CombatManager : PersistentSingleton<CombatManager>
         set
         {
             m_enemy = value;
+            value.Initialize();
             OnEnemyTrainerChanged?.Invoke(this,new NewTrainerArgs(value));
         }
     }

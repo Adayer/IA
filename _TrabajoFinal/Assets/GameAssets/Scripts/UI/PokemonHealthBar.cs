@@ -46,7 +46,7 @@ public class PokemonHealthBar : MonoBehaviour
         if (currentPokemonInDisplay != null)
             currentPokemonInDisplay.OnHPChanged -= UpdateHealth;
         currentPokemonInDisplay = newPokemon;
-        UpdateHealth(newPokemon.MaxHp);
+        UpdateHealth(newPokemon.CurrentHP);
         currentPokemonInDisplay.OnHPChanged += UpdateHealth;
     }
 }

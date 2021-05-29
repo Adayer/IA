@@ -41,7 +41,7 @@ public class PlayerTrainer : TrainerParent
 
         for (int i = 0; i < pkmButtons.Length; i++)
         {
-            pkmButtons[i].gameObject.GetComponent<ChangePokemon>().Pokemon = m_pokemonTeam[i];
+            pkmButtons[i].gameObject.GetComponent<ChangePokemon>().Pokemon = m_pokemonTeam[i];            
         }
 
         UpdatePokemonTeam();
@@ -101,12 +101,13 @@ public class PlayerTrainer : TrainerParent
         Button[] pkmButtons = m_parentPokemonPicker.GetComponentsInChildren<Button>();
         for (int i = 0; i < pkmButtons.Length; i++)
         {
-            pkmButtons[i].interactable = newState;
+            if (pkmButtons[i].GetComponent<ChangePokemon>().Pokemon.CurrentHP > 0 && newState)
+                pkmButtons[i].interactable = newState;
         }
     }
 
     private void ButtonsUninteractableAttacks()
-    {       
+    {
         ToggleButtonsInteractableAttacks(false);
         CurrentPokemonPicked.OnPokemonFainted -= ButtonsUninteractableAttacks;
     }
@@ -136,7 +137,7 @@ public class PlayerTrainer : TrainerParent
     {
         if (CurrentPokemonPicked.CurrentHP > 0)
             ButtonsInteractableAttacks();
-        
+
         InteractableChangePokemonButtons();
     }
 

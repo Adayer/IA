@@ -72,11 +72,14 @@ public class TrainerParent : MonoBehaviour
             int random = Random.Range(0, possiblePokemonsList.Count);
             m_pokemonTeam.Add(possiblePokemonsList[random]);
             possiblePokemonsList.RemoveAt(random);
-            if (m_pokemonTeam.Count == 1)
-            {
-                UpdatePickedPokemon(m_pokemonTeam[0]);
-            }
+            //if (m_pokemonTeam.Count == 1)
+            //{
+            //    UpdatePickedPokemon(m_pokemonTeam[0]);
+            //}
         }
+
+        UpdatePickedPokemon(m_pokemonTeam[0]);
+
         //OnPokemonChanged?.Invoke(m_pokemonTeam[0]);
         for (int i = possiblePokemonsList.Count - 1; i >= 0; i--)
         {
@@ -110,6 +113,7 @@ public class TrainerParent : MonoBehaviour
 
     public virtual void UpdatePickedPokemon(PokemonParent newPickedPkmn)
     {
+        //Debug.LogError(newPickedPkmn.Name);
         if (newPickedPkmn == null && m_currentPickedPokemon == null)
         {
             Debug.LogError("NewPickedPkm is null & CurrentPickedPokemon is null");
@@ -124,7 +128,6 @@ public class TrainerParent : MonoBehaviour
 
         if (isPlayer && m_currentPickedPokemon != null)
             m_currentPickedPokemon.DesubscribirTMs();
-
         CurrentPokemonPicked = newPickedPkmn;
         m_imgPickedPokemon.sprite = newPickedPkmn.Sprite;
 

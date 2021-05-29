@@ -31,7 +31,7 @@ public class ChangePokemon : ActionParent
     {
         print(trainer.CurrentPokemonPicked.Name + " vuelve aquí.");
         yield return new WaitForSeconds(0.5f);
-        trainer.UpdatePickedPokemon(m_pokemon);
+        trainer.UpdatePickedPokemon(Pokemon);
         print(trainer.CurrentPokemonPicked.Name + " te elijo a ti!");
         //trainer.CurrentPokemonPicked = m_pokemon;
         if (trainer is PlayerTrainer)
