@@ -9,14 +9,14 @@ public class CombatManager : PersistentSingleton<CombatManager>
 {
     public enum ActionType { Attack, UseItem, SwapPokemon }
 
-    [SerializeField] private TrainerParent m_player;
+    [SerializeField] private PlayerTrainer m_player;
 
     [SerializeField] private EnemyTrainerIA m_enemy;
 
     public TrainerParent trainerThatActsFirst;
     public TrainerParent trainerThatActsSecond;
     [SerializeField] GenericQueue<EnemyTrainerIA> m_enemyTrainerQueue;
-    public TrainerParent Player { get => m_player; }
+    public PlayerTrainer Player { get => m_player; }
     public EnemyTrainerIA Enemy
     {
         get => m_enemy;
@@ -40,14 +40,20 @@ public class CombatManager : PersistentSingleton<CombatManager>
         StartCoroutine(Act());
     }
 
+    [SerializeField] GameObject m_ActionsPanel;
+
     public IEnumerator Act()
     {
         //Change UI
+        //m_ActionsPanel.transform.position -= Vector3.up*500f;
+        Player.DisableUI();
         yield return new WaitForSeconds(1f);
         trainerThatActsFirst.ActionChosen.StartCoroutine(trainerThatActsFirst.ActionChosen.Effect(trainerThatActsFirst));
         yield return new WaitForSeconds(1f);
         trainerThatActsSecond.ActionChosen.StartCoroutine(trainerThatActsSecond.ActionChosen.Effect(trainerThatActsSecond));
         yield return new WaitForSeconds(1f);
+        Player.EnableUI();
+        Player.UpdatePokemonTeam();
         //Show UI Again
 
     }
@@ -65,7 +71,7 @@ public class CombatManager : PersistentSingleton<CombatManager>
     private void SetNewEnemyTrainer(object sender, NewTrainerArgs trainerArgs)
     {
         //TODO: Limpiar todos los GO pokemon del entrenador anterior?
-        trainerArgs.newEnemyTrainer.InitPokemons();
+        trainerArgs.newEnemyTrainer.Initialize();
     }
 
     private void OnDisable()
@@ -102,8 +108,8 @@ public class CombatManager : PersistentSingleton<CombatManager>
     }
 
     private void CalculateTypeCounterDamage(TMParent tmUsed, PokemonParent attackingPokemon, PokemonParent defendingPokemon)
-    {
-        m_totalDamage *= PokemonParent.GetTypeDamageMultiplier(attackingPokemon.Type, defendingPokemon.Type);
+    {        
+        m_totalDamage *= PokemonParent.GetTypeDamageMultiplier(tmUsed.TipoDeAtaque, defendingPokemon.Type);
     }
 
     private void CalculateCritChance(TMParent tmUsed, PokemonParent attackingPokemon, PokemonParent defendingPokemon)

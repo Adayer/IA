@@ -9,7 +9,7 @@ public class PokemonParent : MonoBehaviour
     private AppConstants.TipoPokemon m_type;
 
     public Action OnPokemonFainted;
-
+    public Action<int> OnHPChanged;
     private int m_maxHp;
     private int m_currentHP;
 
@@ -42,7 +42,17 @@ public class PokemonParent : MonoBehaviour
     public int SpAtt { get => m_spAtt; set => m_spAtt = value; }
     public int SpDef { get => m_spDef; set => m_spDef = value; }
     public int Speed1 { get => m_speed; set => m_speed = value; }
-    public int CurrentHP { get => m_currentHP; set => m_currentHP = value; }
+    public int CurrentHP
+    {
+        get => m_currentHP;
+        set
+        {
+            m_currentHP = value;
+            OnHPChanged?.Invoke(m_currentHP);
+        }
+    }
+
+    public int MaxHp { get => m_maxHp; }
 
     public void SetProperties(SOPokemonStats pkmData)
     {
@@ -100,9 +110,8 @@ public class PokemonParent : MonoBehaviour
 
     public void TakeDamage(int amount)
     {
-        Debug.LogError(name + " took " + amount +" damage");
-        CurrentHP -= amount;
-        if(CurrentHP <= 0)
+        CurrentHP -= amount;        
+        if (CurrentHP <= 0)
         {
             Faint();
         }
@@ -110,7 +119,7 @@ public class PokemonParent : MonoBehaviour
 
     public void Faint()
     {
-        Debug.LogError(name + " fainted");
+        Debug.Log(name + " fainted");
         OnPokemonFainted?.Invoke();
     }
 

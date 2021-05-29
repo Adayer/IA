@@ -12,8 +12,6 @@ public class TMParent : ActionParent
     private string m_name;
 
 
-
-
     public string Name { get => m_name; set => m_name = value; }
     public AppConstants.TipoPokemon TipoDeAtaque { get => m_tipoDeAtaque; set => m_tipoDeAtaque = value; }
     public int CritChance { get => m_critChance; set => m_critChance = value; }

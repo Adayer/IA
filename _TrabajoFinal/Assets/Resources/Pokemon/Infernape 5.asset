@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Infernape 5
   m_EditorClassIdentifier: 
   _name: Infernape 5
-  _type: 1
+  _type: 3
   _maxHp: 90
   _attack: 150
   _defense: 80

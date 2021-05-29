@@ -15,5 +15,6 @@ MonoBehaviour:
   _tipoDeAtaque: 3
   "_tipoDeDa\xF1o": 1
   _accuracy: 100
-  _damage: 90
+  _critChance: 0
+  _damage: 10
   _name: Flamethrower

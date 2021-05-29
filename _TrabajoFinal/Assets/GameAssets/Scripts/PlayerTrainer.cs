@@ -1,0 +1,143 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+using System;
+
+public class PlayerTrainer : TrainerParent
+{
+    public Action OnInitializePlayer;
+
+    public override void Initialize()
+    {
+        base.Initialize();
+        LinkTMButtonsToEvents();
+        LinkPokemonChangeButtons();
+        OnInitializePlayer?.Invoke();
+        CurrentPokemonPicked.OnPokemonFainted += ButtonsUninteractableAttacks;
+        OnPokemonChanged += SetUpButtonInteractivity;
+    }
+
+    private void SetUpButtonInteractivity(PokemonParent newPokemon)
+    {
+        ButtonsInteractableAttacks();
+        newPokemon.OnPokemonFainted += ButtonsUninteractableAttacks;
+    }
+
+    private void LinkTMButtonsToEvents()
+    {
+        Button[] attButtons = m_parentMovePicker.GetComponentsInChildren<Button>();
+
+        attButtons[0].onClick.AddListener(TriggerTM1);
+        attButtons[1].onClick.AddListener(TriggerTM2);
+        attButtons[2].onClick.AddListener(TriggerTM3);
+        attButtons[3].onClick.AddListener(TriggerTM4);
+    }
+
+    private void LinkPokemonChangeButtons()
+    {
+        Button[] pkmButtons = m_parentPokemonPicker.GetComponentsInChildren<Button>();
+
+        for (int i = 0; i < pkmButtons.Length; i++)
+        {
+            pkmButtons[i].gameObject.GetComponent<ChangePokemon>().Pokemon = m_pokemonTeam[i];
+        }
+
+        UpdatePokemonTeam();
+    }
+
+    public override void UpdatePickedPokemon(PokemonParent newPickedPkmn)
+    {
+        base.UpdatePickedPokemon(newPickedPkmn);
+
+        m_currentPickedPokemon.SubscribirTMs();
+        Button[] attButtons = m_parentMovePicker.GetComponentsInChildren<Button>();
+
+        attButtons[0].GetComponentInChildren<TextMeshProUGUI>().text = newPickedPkmn.Tm1.Name;
+        SetUpColorsTMs(attButtons[0].gameObject.GetComponent<Image>(), newPickedPkmn.Tm1);
+
+        attButtons[1].GetComponentInChildren<TextMeshProUGUI>().text = newPickedPkmn.Tm2.Name;
+        SetUpColorsTMs(attButtons[1].gameObject.GetComponent<Image>(), newPickedPkmn.Tm2);
+
+        attButtons[2].GetComponentInChildren<TextMeshProUGUI>().text = newPickedPkmn.Tm3.Name;
+        SetUpColorsTMs(attButtons[2].gameObject.GetComponent<Image>(), newPickedPkmn.Tm3);
+
+        attButtons[3].GetComponentInChildren<TextMeshProUGUI>().text = newPickedPkmn.Tm4.Name;
+        SetUpColorsTMs(attButtons[3].gameObject.GetComponent<Image>(), newPickedPkmn.Tm4);
+    }
+
+    public void UpdatePokemonTeam()
+    {
+        Button[] pkmButtons = m_parentPokemonPicker.GetComponentsInChildren<Button>();
+
+        for (int i = 0; i < pkmButtons.Length; i++)
+        {
+            if (m_pokemonTeam[i] == m_currentPickedPokemon || m_pokemonTeam[i].CurrentHP <= 0)
+            {
+                pkmButtons[i].interactable = false;
+            }
+            else if (m_pokemonTeam[i].CurrentHP >= 0)
+            {
+                pkmButtons[i].interactable = true;
+            }
+
+            pkmButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = m_pokemonTeam[i].Name;
+        }
+    }
+
+    public void UninteractableChangePokemonButtons()
+    {
+        ToggleButtonsInteractableChangePkmn(false);
+    }
+
+    public void InteractableChangePokemonButtons()
+    {
+        ToggleButtonsInteractableChangePkmn(true);
+    }
+
+    private void ToggleButtonsInteractableChangePkmn(bool newState)
+    {
+        Button[] pkmButtons = m_parentPokemonPicker.GetComponentsInChildren<Button>();
+        for (int i = 0; i < pkmButtons.Length; i++)
+        {
+            pkmButtons[i].interactable = newState;
+        }
+    }
+
+    private void ButtonsUninteractableAttacks()
+    {       
+        ToggleButtonsInteractableAttacks(false);
+        CurrentPokemonPicked.OnPokemonFainted -= ButtonsUninteractableAttacks;
+    }
+
+    private void ButtonsInteractableAttacks()
+    {
+        ToggleButtonsInteractableAttacks(true);
+    }
+
+    private void ToggleButtonsInteractableAttacks(bool newState)
+    {
+        Button[] attButtons = m_parentMovePicker.GetComponentsInChildren<Button>();
+        for (int i = 0; i < attButtons.Length; i++)
+        {
+            attButtons[i].interactable = newState;
+        }
+    }
+
+
+    public void DisableUI()
+    {
+        ButtonsUninteractableAttacks();
+        UninteractableChangePokemonButtons();
+    }
+
+    public void EnableUI()
+    {
+        if (CurrentPokemonPicked.CurrentHP > 0)
+            ButtonsInteractableAttacks();
+        
+        InteractableChangePokemonButtons();
+    }
+
+}
