@@ -34,7 +34,6 @@ public class ChangePokemon : ActionParent
         trainer.UpdatePickedPokemon(m_pokemon);
         print(trainer.CurrentPokemonPicked.Name + " te elijo a ti!");
         //trainer.CurrentPokemonPicked = m_pokemon;
-        Debug.LogError(trainer is PlayerTrainer);
         if (trainer is PlayerTrainer)
         {
             ((PlayerTrainer)trainer).UpdatePokemonTeam();

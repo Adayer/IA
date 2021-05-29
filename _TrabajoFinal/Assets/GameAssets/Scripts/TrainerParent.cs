@@ -166,7 +166,6 @@ public class TrainerParent : MonoBehaviour
 
     protected void SetUpColorsPkmn(Image img, PokemonParent pkm)
     {
-        Debug.LogError("Pokemon type is " + pkm.Type);
         switch (pkm.Type)
         {
             case AppConstants.TipoPokemon.Normal:
