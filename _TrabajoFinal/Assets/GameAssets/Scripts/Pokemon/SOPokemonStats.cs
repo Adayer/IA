@@ -18,6 +18,7 @@ public class SOPokemonStats : ScriptableObject
     public int _speed;
 
     public Sprite _sprite;
+    public Sprite _sprite2;
 
     public TMSO _tm0;
     public TMSO _tm1;

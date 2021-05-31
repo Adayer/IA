@@ -37,7 +37,7 @@ public class TrainerParent : MonoBehaviour
         set
         {
             m_currentPickedPokemon = value;
-            SetUpColorsPkmn(m_imgPickedPokemon, value);
+            //SetUpColorsPkmn(m_imgPickedPokemon, value);
             OnPokemonChanged?.Invoke(value);
         }
     }
@@ -142,15 +142,21 @@ public class TrainerParent : MonoBehaviour
             return;
         }
 
-        if (isPlayer && m_currentPickedPokemon != null)
-            m_currentPickedPokemon.DesubscribirTMs();
+
+        if (isPlayer)
+        {
+            if(CurrentPokemonPicked != null)
+            {
+                m_currentPickedPokemon.DesubscribirTMs();
+            }
+            m_imgPickedPokemon.sprite = newPickedPkmn.Sprite;
+        }
+        else if(!isPlayer)
+        {
+            m_imgPickedPokemon.sprite = newPickedPkmn.Sprite2;
+        }
 
         CurrentPokemonPicked = newPickedPkmn;
-
-
-        m_imgPickedPokemon.sprite = newPickedPkmn.Sprite;
-
-
     } 
 
 

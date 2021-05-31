@@ -57,6 +57,7 @@ public class CombatManager : PersistentSingleton<CombatManager>
         Player.DisableUI();
         if (m_playerSendingOutNewPokemon)
         {
+            print("");
             Player.ActionChosen.StartCoroutine(Player.ActionChosen.Effect(Player));
             m_playerSendingOutNewPokemon = false;
         }

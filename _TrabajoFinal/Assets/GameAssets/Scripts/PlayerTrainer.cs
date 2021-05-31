@@ -44,7 +44,8 @@ public class PlayerTrainer : TrainerParent
         for (int i = 0; i < pkmButtons.Length; i++)
         {
             pkmButtons[i].gameObject.GetComponent<ChangePokemon>().Pokemon = m_pokemonTeam[i];
-            SetUpColorsPkmn(pkmButtons[i].GetComponent<Image>(), m_pokemonTeam[i]);
+            //SetUpColorsPkmn(pkmButtons[i].GetComponent<Image>(), m_pokemonTeam[i]);
+
         }
 
         UpdatePokemonTeam();

@@ -21,6 +21,7 @@ public class PokemonParent : MonoBehaviour, Interfaces.IDamageable
     private int m_speed;
 
     private Sprite m_sprite;
+    private Sprite m_sprite2;
 
     private bool m_hasFainted = false;
 
@@ -30,6 +31,7 @@ public class PokemonParent : MonoBehaviour, Interfaces.IDamageable
     public string Name { get => m_name; set => m_name = value; }
     public AppConstants.TipoPokemon Type { get => m_type; set => m_type = value; }
     public Sprite Sprite { get => m_sprite; set => m_sprite = value; }
+    public Sprite Sprite2 { get => m_sprite2; set => m_sprite2 = value; }
     public List<TMParent> Tms { get => m_tms; set => m_tms = value; }
 
     public int Attack { get => m_attack; set => m_attack = value; }
@@ -63,6 +65,7 @@ public class PokemonParent : MonoBehaviour, Interfaces.IDamageable
         m_spDef = pkmData._spDef;
         m_speed = pkmData._speed;
         m_sprite = pkmData._sprite;
+        m_sprite2 = pkmData._sprite2;
 
         GameObject newTM0 = new GameObject("TM");
         newTM0.transform.parent = this.transform;
