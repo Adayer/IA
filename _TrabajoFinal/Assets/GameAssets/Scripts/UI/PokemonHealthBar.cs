@@ -13,15 +13,20 @@ public class PokemonHealthBar : MonoBehaviour
         if (!hpBar)
             hpBar = GetComponent<Image>();
         CombatManager cm = FindObjectOfType<CombatManager>();
-        
+
         if (isPlayerPokemonHP)
-        {            
+        {
             cm.Player.OnPokemonChanged += UpdatePokemonReference;
         }
         else
-        {
-            cm.Enemy.OnPokemonChanged += UpdatePokemonReference;
-        }
+            cm.OnEnemyTrainerChanged += TrainerChanged;
+
+    }
+
+    private void TrainerChanged(object sender, NewTrainerArgs e)
+    {
+        UpdatePokemonReference(FindObjectOfType<CombatManager>().Enemy.CurrentPokemonPicked);
+        FindObjectOfType<CombatManager>().Enemy.OnPokemonChanged += UpdatePokemonReference;
     }
 
     private void OnDestroy()

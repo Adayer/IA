@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a13edbe0391da6b4ab5e09c1c7bf7dfa, type: 3}
+  m_Name: Trainer
+  m_EditorClassIdentifier: 
+  pokemonTeam:
+  - {fileID: 11400000, guid: e6b9462e82da30646a43f50ce7d1582e, type: 2}
+  - {fileID: 11400000, guid: ced78f5fe2fdc454685d7105c57c3733, type: 2}
+  - {fileID: 11400000, guid: 613a3476d32757847ac98c1d0869cbca, type: 2}
+  - {fileID: 11400000, guid: b1aa6ffe04044bb489727493937b5de8, type: 2}
+  - {fileID: 11400000, guid: e6b9462e82da30646a43f50ce7d1582e, type: 2}
+  - {fileID: 11400000, guid: ced78f5fe2fdc454685d7105c57c3733, type: 2}

@@ -87,7 +87,13 @@ namespace CleverCrow.Fluid.BTs.Samples
             {
                 StartCoroutine(SwapPokemon());
             }
+            //m_changePokemonAction.Pokemon = m_pokemonTeam[bestPokemon];
+            ChooseAction(m_changePokemonAction, CombatManager.ActionType.SwapPokemon);
             yield return new WaitForSeconds(1f);
+            if(bestPokemon == -1 && m_currentPickedPokemon.CurrentHP <= 0)
+            {
+                CombatManager.Instance.EnemyTrainerLost();
+            }
         }
 
         private IEnumerator SwapPokemon()

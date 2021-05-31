@@ -15,10 +15,11 @@ public class CombatManager : PersistentSingleton<CombatManager>
 
     public TrainerParent trainerThatActsFirst;
     public TrainerParent trainerThatActsSecond;
-    [SerializeField] GenericQueue<EnemyTrainerIA> m_enemyTrainerQueue;
-
+    List<TrainerSO> m_enemyTrainerListSO;
+    GenericQueue<EnemyTrainerIA> m_enemyTrainerQueue;
+    [SerializeField] int m_numberOfEnemyTrainers;
     bool m_playerSendingOutNewPokemon = false;
-
+    int m_currentEnemyTrainerIndex;
     public PlayerTrainer Player { get => m_player; }
     public EnemyTrainerIA Enemy
     {
@@ -26,8 +27,8 @@ public class CombatManager : PersistentSingleton<CombatManager>
         set
         {
             m_enemy = value;
-            value.Initialize();
-            OnEnemyTrainerChanged?.Invoke(this,new NewTrainerArgs(value));
+            //value.Initialize();
+            OnEnemyTrainerChanged?.Invoke(this, new NewTrainerArgs(m_enemyTrainerListSO[m_currentEnemyTrainerIndex]));
         }
     }
 
@@ -93,6 +94,7 @@ public class CombatManager : PersistentSingleton<CombatManager>
     {
         StartCoroutine(m_enemy.SendNewPokemon());
         yield return new WaitForSeconds(1f);
+        Player.EnableUI();
     }
 
     private void OnEnable()
@@ -113,8 +115,8 @@ public class CombatManager : PersistentSingleton<CombatManager>
 
     private void SetNewEnemyTrainer(object sender, NewTrainerArgs trainerArgs)
     {
-        //TODO: Limpiar todos los GO pokemon del entrenador anterior?
-        trainerArgs.newEnemyTrainer.Initialize();
+        Enemy.Initialize(trainerArgs.newEnemyTrainer.pokemonTeam);
+        Player.HealAllPokemon();
     }
 
     private void OnDisable()
@@ -321,13 +323,53 @@ public class CombatManager : PersistentSingleton<CombatManager>
 
     public void EnemyTrainerLost()
     {
-        Enemy = m_enemyTrainerQueue.QuitarDeLaFila();
+        m_currentEnemyTrainerIndex++;
+        m_enemyTrainerQueue.QuitarDeLaFila();
+        print("HAS GANADO A UN ENTRENADOR! " + m_enemyTrainerQueue.count + " restante(s). Curando a todos tus pokémon");
+        if (m_enemyTrainerQueue.count > 0)
+            Enemy = m_enemyTrainerQueue.head.data;
+        else
+            print("ENHORABUENA! HAS GANADO A TODOS LOS ENTRENAORES!");
     }
 
     public void StartCombat()
     {
-        Player.Initialize();
-        Enemy.Initialize();
+        Player.Initialize(null);
+
+        if (m_enemyTrainerQueue == null)
+            m_enemyTrainerQueue = new GenericQueue<EnemyTrainerIA>();
+        GameObject trainers = new GameObject("Trainers");
+        int remaining = m_enemyTrainerListSO.Count;
+        int i = 0;
+        while (remaining > 0)
+        {
+            //Debug.LogError("Remaining trainers to load from SOs" + remaining);
+            i++;
+            EnemyTrainerIA trainer = new GameObject("Trainer" + (i)).AddComponent<EnemyTrainerIA>();
+            TrainerSO tso = m_enemyTrainerListSO[i-1];
+            //Debug.LogError("Loading trainer SO" + tso);
+            trainer.InitPokemons(tso.pokemonTeam);
+            //Debug.LogError("Initialized pokemons of trainer " + (i));
+            trainer.transform.parent = trainers.transform;
+            m_enemyTrainerQueue.PonerALaFila(trainer);
+            remaining--;
+        }
+        //Debug.LogError("Ended trainer queue");
+        Enemy = m_enemyTrainerQueue.head.data;
+        Enemy.SetPokemons(m_enemyTrainerQueue.head.data.PokemonTeam);
+    }
+
+    private void Start()
+    {
+        //m_enemyTrainerQueueSO
+
+        object[] enemyTrainers;
+        enemyTrainers = Resources.LoadAll("Trainer", typeof(TrainerSO));
+        m_enemyTrainerListSO = new List<TrainerSO>();
+        for (int i = 0; i < m_numberOfEnemyTrainers; i++)
+        {
+            m_enemyTrainerListSO.Add((TrainerSO)enemyTrainers[i]);
+        }
     }
 
 }

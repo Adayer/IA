@@ -6,8 +6,8 @@ using CleverCrow.Fluid.BTs.Samples;
 
 public class NewTrainerArgs : EventArgs
 {
-    public EnemyTrainerIA newEnemyTrainer;
-    public NewTrainerArgs(EnemyTrainerIA newEnemyTrainer)
+    public TrainerSO newEnemyTrainer;
+    public NewTrainerArgs(TrainerSO newEnemyTrainer)
     {
         this.newEnemyTrainer = newEnemyTrainer;
     }

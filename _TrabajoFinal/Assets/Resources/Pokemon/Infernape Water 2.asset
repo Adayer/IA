@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 986094012eb837f4aafe34eb382e9826, type: 3}
-  m_Name: Infernape 3
+  m_Name: Infernape Water 2
   m_EditorClassIdentifier: 
-  _name: Infernape 3
-  _type: 2
+  _name: Infernape Water 2
+  _type: 1
   _maxHp: 90
   _attack: 150
   _defense: 80
@@ -21,7 +21,7 @@ MonoBehaviour:
   _spDef: 80
   _speed: 120
   _sprite: {fileID: 21300000, guid: e9e46ec2d3bfbe745a207fde88e98855, type: 3}
-  _tm0: {fileID: 11400000, guid: 3f2ad7ea814812e4e856f1b763bdc730, type: 2}
+  _tm0: {fileID: 11400000, guid: 05d0b96442e3a7d4fb62fdcf1fa01527, type: 2}
   _tm1: {fileID: 11400000, guid: a689cdb4949046b4cbb8771ee0c4638c, type: 2}
-  _tm2: {fileID: 11400000, guid: fb1bc754439c17e469a7738cf68c6fec, type: 2}
-  _tm3: {fileID: 11400000, guid: 30b9ebfd272755d40b70c8380bab8701, type: 2}
+  _tm2: {fileID: 11400000, guid: 5ab3ea376bd07ec4ba44164298e89814, type: 2}
+  _tm3: {fileID: 11400000, guid: 47b6378f7264a624683a505ef612375a, type: 2}

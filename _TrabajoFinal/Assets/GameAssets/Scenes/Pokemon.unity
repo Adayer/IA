@@ -417,7 +417,7 @@ GameObject:
   - component: {fileID: 207571763}
   m_Layer: 5
   m_Name: SuPokemon
-  m_TagString: Untagged
+  m_TagString: EnemyPlayerImg
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3140,11 +3140,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_player: {fileID: 1283165982}
-  m_enemy: {fileID: 1952594084}
+  m_enemy: {fileID: 0}
   trainerThatActsFirst: {fileID: 0}
   trainerThatActsSecond: {fileID: 0}
-  m_enemyTrainerQueue:
-    count: 0
+  m_numberOfEnemyTrainers: 3
   m_ActionsPanel: {fileID: 1240002606}
 --- !u!4 &1367926695
 Transform:
@@ -3158,7 +3157,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1370382824
 GameObject:
@@ -4001,53 +4000,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!1 &1952594083
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1952594085}
-  - component: {fileID: 1952594084}
-  m_Layer: 0
-  m_Name: Enemy
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1952594084
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1952594083}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf19406540a9e9e4d91e71d3b2ef2645, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isPlayer: 0
-  m_imgPickedPokemon: {fileID: 207571763}
-  m_parentMovePicker: {fileID: 0}
-  m_parentPokemonPicker: {fileID: 0}
---- !u!4 &1952594085
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1952594083}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 681.7578, y: 305.78082, z: -29.047949}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2058138482
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-public class PokemonParent : MonoBehaviour
+public class PokemonParent : MonoBehaviour, Interfaces.IDamageable
 {
     private string m_name;
 
@@ -43,6 +43,7 @@ public class PokemonParent : MonoBehaviour
         set
         {
             m_currentHP = value;
+            m_currentHP = Mathf.Clamp(m_currentHP, 0, m_maxHp);
             OnHPChanged?.Invoke(m_currentHP);
         }
     }
@@ -184,5 +185,11 @@ public class PokemonParent : MonoBehaviour
         Debug.LogError("Water vs Water: " + GetTypeDamageMultiplier(AppConstants.TipoPokemon.Water, AppConstants.TipoPokemon.Water));
         Debug.LogError("Fire vs Fire: " + GetTypeDamageMultiplier(AppConstants.TipoPokemon.Fire, AppConstants.TipoPokemon.Fire));
         Debug.LogError("Normal vs Normal: " + GetTypeDamageMultiplier(AppConstants.TipoPokemon.Normal, AppConstants.TipoPokemon.Normal));
+    }
+
+
+    public void Heal(int amount)
+    {
+        CurrentHP += amount;
     }
 }

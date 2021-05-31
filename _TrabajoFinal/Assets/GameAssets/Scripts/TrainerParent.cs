@@ -42,18 +42,31 @@ public class TrainerParent : MonoBehaviour
         }
     }
 
+    public List<PokemonParent> PokemonTeam { get => m_pokemonTeam; }
+
     public Action<PokemonParent> OnPokemonChanged;
 
-    public virtual void Initialize()
+    public virtual void Initialize(List<SOPokemonStats> pokemonStats)
     {
-        InitPokemons();
+        InitPokemons(pokemonStats);
 
     }
 
     #region Metodos de inicialización
-    public void InitPokemons()
+    public void InitPokemons(List<SOPokemonStats> pokemonStats)
     {
-        object[] possiblePokemons = Resources.LoadAll("Pokemon", typeof(SOPokemonStats));
+        object[] possiblePokemons;
+        if (m_pokemonTeam == null)
+            m_pokemonTeam = new List<PokemonParent>();
+        if (pokemonStats != null)
+        {
+            possiblePokemons = pokemonStats.ToArray();
+           
+        }
+        else
+        {
+            possiblePokemons = Resources.LoadAll("Pokemon", typeof(SOPokemonStats));
+        }
 
         List<PokemonParent> possiblePokemonsList = new List<PokemonParent>(0);
 
@@ -92,10 +105,10 @@ public class TrainerParent : MonoBehaviour
     #endregion
 
     #region TMTriggers
-    protected void TriggerTM1() { OnTM1?.Invoke(); }
-    protected void TriggerTM2() { OnTM2?.Invoke(); }
-    protected void TriggerTM3() { OnTM3?.Invoke(); }
-    protected void TriggerTM4() { OnTM0?.Invoke(); }
+    protected void TriggerTM1() { OnTM0?.Invoke(); }
+    protected void TriggerTM2() { OnTM1?.Invoke(); }
+    protected void TriggerTM3() { OnTM2?.Invoke(); }
+    protected void TriggerTM4() { OnTM3?.Invoke(); }
     #endregion
 
     #region Metodos de acción
@@ -115,6 +128,8 @@ public class TrainerParent : MonoBehaviour
     public virtual void UpdatePickedPokemon(PokemonParent newPickedPkmn)
     {
         //Debug.LogError(newPickedPkmn.Name);
+        if (!m_imgPickedPokemon)
+            m_imgPickedPokemon = GameObject.FindGameObjectWithTag("EnemyPlayerImg").GetComponent<Image>();
         if (newPickedPkmn == null && m_currentPickedPokemon == null)
         {
             Debug.LogError("NewPickedPkm is null & CurrentPickedPokemon is null");
@@ -129,14 +144,22 @@ public class TrainerParent : MonoBehaviour
 
         if (isPlayer && m_currentPickedPokemon != null)
             m_currentPickedPokemon.DesubscribirTMs();
+
         CurrentPokemonPicked = newPickedPkmn;
+
+
         m_imgPickedPokemon.sprite = newPickedPkmn.Sprite;
 
 
-    } // Pasar a Clase abstracta
+    } 
 
 
     #endregion
+
+    public void SetPokemons(List<PokemonParent> pokemons)
+    {
+        m_pokemonTeam = pokemons;
+    }
 
     #region Metodos de Utilidad
     protected void SetUpColorsTMs(Image img, TMParent tm)

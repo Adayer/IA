@@ -10,9 +10,9 @@ public class PlayerTrainer : TrainerParent
     public Action OnInitializePlayer;
     bool iSInitializing = true;
 
-    public override void Initialize()
+    public override void Initialize(List<SOPokemonStats> pokemonStats)
     {
-        base.Initialize();
+        base.Initialize(pokemonStats);
         LinkTMButtonsToEvents();
         LinkPokemonChangeButtons();
         OnInitializePlayer?.Invoke();
@@ -43,7 +43,8 @@ public class PlayerTrainer : TrainerParent
 
         for (int i = 0; i < pkmButtons.Length; i++)
         {
-            pkmButtons[i].gameObject.GetComponent<ChangePokemon>().Pokemon = m_pokemonTeam[i];            
+            pkmButtons[i].gameObject.GetComponent<ChangePokemon>().Pokemon = m_pokemonTeam[i];
+            SetUpColorsPkmn(pkmButtons[i].GetComponent<Image>(), m_pokemonTeam[i]);
         }
 
         UpdatePokemonTeam();
@@ -119,6 +120,14 @@ public class PlayerTrainer : TrainerParent
             {
                 pkmButtons[i].interactable = false;
             }
+        }
+    }
+
+    internal void HealAllPokemon()
+    {
+        for (int i = 0; i < m_pokemonTeam.Count; i++)
+        {
+            m_pokemonTeam[i].Heal(9999);
         }
     }
 

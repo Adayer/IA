@@ -6,8 +6,8 @@ public class Interfaces
 {
     public interface IDamageable
     {
-        void TakeDamage();
-        void Heal();
+        void TakeDamage(int amount);
+        void Heal(int amount);
     }
 
     public interface IConsumible
