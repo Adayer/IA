@@ -18,7 +18,9 @@ namespace CleverCrow.Fluid.BTs.Samples
 
         private void Awake()
         {
+            //print("Building tree");
             _trainerIA = new BehaviorTreeBuilder(gameObject)
+
             .Selector()
                 .Sequence()
                     .Condition("Can KO?", () => CalculateIfCanKill(CurrentPokemonPicked))
@@ -33,21 +35,23 @@ namespace CleverCrow.Fluid.BTs.Samples
                 .End()
                 .Sequence()
                     .Condition("Is good match up?", () => CheckTypeMatchUp(CurrentPokemonPicked))
-                    .Do("Use best Attack", () => UseBestAttack())
+                    .Do("Use best Attack", () => UseBestAttack()/*{  print("GOOD MATCHUP, CHOOSING BEST ATTACK attack"); return TaskStatus.Success; }*/ )
                 .End()
                 .Selector()
                     .Sequence()
                         .Condition("Have better pokemon?", () => CheckIfBetterPokemon())
                         .Do("Change pokemon", () => ChangeToBestPokemon())
                     .End()
-                    .Do("Use best Attack", () => UseBestAttack())
+                    .Do("Use best Attack", () => UseBestAttack()    /*{print("NOT GOOD MATCHUP, CHOOSING BEST ATTACK attack"); return TaskStatus.Success; }*/ )
                 .End()
             .End()
             .Build();
+            //print("Tree built");
         }
 
         public void Act()
         {
+            //print("Acting");
             _trainerIA.Tick();
         }
 
@@ -82,7 +86,7 @@ namespace CleverCrow.Fluid.BTs.Samples
 
         private bool CheckIfLowHP()
         {
-            if(CurrentPokemonPicked.CurrentHP <= CurrentPokemonPicked.CurrentHP * 0.3f)
+            if (CurrentPokemonPicked.CurrentHP <= CurrentPokemonPicked.MaxHp * 0.3f)
             {
                 return true;
             }
@@ -96,9 +100,10 @@ namespace CleverCrow.Fluid.BTs.Samples
 
         private bool CheckTypeMatchUp(PokemonParent pokemonToCheck) // Returns true is supereffective or neutral
         {
-            if(pokemonToCheck.Type == AppConstants.TipoPokemon.Normal
+            if (pokemonToCheck.Type == AppConstants.TipoPokemon.Normal
                 || CombatManager.Instance.Player.CurrentPokemonPicked.Type == AppConstants.TipoPokemon.Normal)
             {
+                //print("is good matchup");
                 return true;
             }
 
@@ -106,11 +111,13 @@ namespace CleverCrow.Fluid.BTs.Samples
             {
                 case AppConstants.TipoPokemon.Fire:
                     {
-                        if(CombatManager.Instance.Player.CurrentPokemonPicked.Type == AppConstants.TipoPokemon.Fire
+                        if (CombatManager.Instance.Player.CurrentPokemonPicked.Type == AppConstants.TipoPokemon.Fire
                             || CombatManager.Instance.Player.CurrentPokemonPicked.Type == AppConstants.TipoPokemon.Grass)
                         {
+                            //print("is good matchup");
                             return true;
                         }
+                        //print("is bad matchup");
                         return false;
                     }
                 case AppConstants.TipoPokemon.Water:
@@ -118,8 +125,10 @@ namespace CleverCrow.Fluid.BTs.Samples
                         if (CombatManager.Instance.Player.CurrentPokemonPicked.Type == AppConstants.TipoPokemon.Fire
                             || CombatManager.Instance.Player.CurrentPokemonPicked.Type == AppConstants.TipoPokemon.Water)
                         {
+                            //print("is good matchup");
                             return true;
                         }
+                        //print("is bad matchup");
                         return false;
                     }
                 case AppConstants.TipoPokemon.Grass:
@@ -127,11 +136,14 @@ namespace CleverCrow.Fluid.BTs.Samples
                         if (CombatManager.Instance.Player.CurrentPokemonPicked.Type == AppConstants.TipoPokemon.Grass
                             || CombatManager.Instance.Player.CurrentPokemonPicked.Type == AppConstants.TipoPokemon.Water)
                         {
+                            //print("is good matchup");
                             return true;
                         }
+                        //print("is bad matchup");
                         return false;
                     }
             }
+            //print("is bad matchup");
             return false;
         }
 
@@ -145,32 +157,32 @@ namespace CleverCrow.Fluid.BTs.Samples
             bestPokemon = -1;
             for (int i = 0; i < m_pokemonTeam.Count; i++)
             {
-                if(m_pokemonTeam[i] == CurrentPokemonPicked)
+                if (m_pokemonTeam[i] == CurrentPokemonPicked)
                 {
                     continue;
                 }
-                if(m_pokemonTeam[i].Type == CurrentPokemonPicked.Type)
+                if (m_pokemonTeam[i].Type == CurrentPokemonPicked.Type)
                 {
                     continue;
                 }
 
                 bool canKill = CalculateIfCanKill(m_pokemonTeam[i]);
 
-                if(m_pokemonTeam[i].Type != AppConstants.TipoPokemon.Normal)
-                {   
+                if (m_pokemonTeam[i].Type != AppConstants.TipoPokemon.Normal)
+                {
                     if (m_pokemonTeam[i].Type != CombatManager.Instance.Player.CurrentPokemonPicked.Type)
                     {
                         if (bestPokemon == -1)
                         {
-                            if(m_pokemonTeam[i].CurrentHP >= m_pokemonTeam[i].CurrentHP * 0.5f)
+                            if (m_pokemonTeam[i].CurrentHP >= m_pokemonTeam[i].CurrentHP * 0.5f)
                             {
                                 bestPokemon = i;
                                 bestPokemonCanKill = canKill;
                             }
                         }
-                        else 
+                        else
                         {
-                            if(m_pokemonTeam[i].CurrentHP >= m_pokemonTeam[i].CurrentHP * 0.5f)
+                            if (m_pokemonTeam[i].CurrentHP >= m_pokemonTeam[i].CurrentHP * 0.5f)
                             {
                                 if (bestPokemonCanKill)
                                 {
@@ -188,20 +200,20 @@ namespace CleverCrow.Fluid.BTs.Samples
                                                 bestPokemon = i;
                                                 bestPokemonCanKill = canKill;
                                             }
-                                            else if(m_pokemonTeam[i].Speed >= CombatManager.Instance.Player.CurrentPokemonPicked.Speed
+                                            else if (m_pokemonTeam[i].Speed >= CombatManager.Instance.Player.CurrentPokemonPicked.Speed
                                                 && m_pokemonTeam[i].Speed < m_pokemonTeam[bestPokemon].Speed)
                                             {
-                                                if(m_pokemonTeam[i].CurrentHP > m_pokemonTeam[bestPokemon].CurrentHP)
+                                                if (m_pokemonTeam[i].CurrentHP > m_pokemonTeam[bestPokemon].CurrentHP)
                                                 {
                                                     bestPokemon = i;
                                                     bestPokemonCanKill = canKill;
                                                 }
                                             }
-                                            else if(m_pokemonTeam[i].Speed <= CombatManager.Instance.Player.CurrentPokemonPicked.Speed)
+                                            else if (m_pokemonTeam[i].Speed <= CombatManager.Instance.Player.CurrentPokemonPicked.Speed)
                                             {
-                                                if(m_pokemonTeam[i].Type != m_pokemonTeam[bestPokemon].Type)
+                                                if (m_pokemonTeam[i].Type != m_pokemonTeam[bestPokemon].Type)
                                                 {
-                                                    if(m_pokemonTeam[bestPokemon].Type == CurrentPokemonPicked.Type)
+                                                    if (m_pokemonTeam[bestPokemon].Type == CurrentPokemonPicked.Type)
                                                     {
                                                         if (m_pokemonTeam[i].CurrentHP * 1.5f > m_pokemonTeam[bestPokemon].CurrentHP * 0.75f)
                                                         {
@@ -232,7 +244,7 @@ namespace CleverCrow.Fluid.BTs.Samples
                                 }
                                 else
                                 {
-                                    if(m_pokemonTeam[i].CurrentHP >= m_pokemonTeam[i].CurrentHP * 0.5f)
+                                    if (m_pokemonTeam[i].CurrentHP >= m_pokemonTeam[i].CurrentHP * 0.5f)
                                     {
                                         if (canKill)
                                         {
@@ -247,18 +259,18 @@ namespace CleverCrow.Fluid.BTs.Samples
                                                 bestPokemon = i;
                                                 bestPokemonCanKill = canKill;
                                             }
-                                            else if(m_pokemonTeam[i].Speed >= CombatManager.Instance.Player.CurrentPokemonPicked.Speed
+                                            else if (m_pokemonTeam[i].Speed >= CombatManager.Instance.Player.CurrentPokemonPicked.Speed
                                                 && m_pokemonTeam[i].Speed < m_pokemonTeam[bestPokemon].Speed)
                                             {
-                                                if(m_pokemonTeam[i].CurrentHP > m_pokemonTeam[bestPokemon].CurrentHP)
+                                                if (m_pokemonTeam[i].CurrentHP > m_pokemonTeam[bestPokemon].CurrentHP)
                                                 {
                                                     bestPokemon = i;
                                                     bestPokemonCanKill = canKill;
                                                 }
                                             }
-                                            else if(m_pokemonTeam[i].Speed <= CombatManager.Instance.Player.CurrentPokemonPicked.Speed)
+                                            else if (m_pokemonTeam[i].Speed <= CombatManager.Instance.Player.CurrentPokemonPicked.Speed)
                                             {
-                                                if(m_pokemonTeam[i].Type != m_pokemonTeam[bestPokemon].Type)
+                                                if (m_pokemonTeam[i].Type != m_pokemonTeam[bestPokemon].Type)
                                                 {
                                                     if (m_pokemonTeam[i].CurrentHP * 1.5f > m_pokemonTeam[bestPokemon].CurrentHP)
                                                     {
@@ -282,11 +294,11 @@ namespace CleverCrow.Fluid.BTs.Samples
                         }
                     }
                 }
-                else if(m_pokemonTeam[i].Type == AppConstants.TipoPokemon.Normal || m_pokemonTeam[i].Type == CombatManager.Instance.Player.CurrentPokemonPicked.Type)
+                else if (m_pokemonTeam[i].Type == AppConstants.TipoPokemon.Normal || m_pokemonTeam[i].Type == CombatManager.Instance.Player.CurrentPokemonPicked.Type)
                 {
                     if (bestPokemon == -1)
                     {
-                        if(m_pokemonTeam[i].CurrentHP >= m_pokemonTeam[i].CurrentHP * 0.5f)
+                        if (m_pokemonTeam[i].CurrentHP >= m_pokemonTeam[i].CurrentHP * 0.5f)
                         {
                             bestPokemon = i;
                             bestPokemonCanKill = canKill;
@@ -294,7 +306,7 @@ namespace CleverCrow.Fluid.BTs.Samples
                     }
                     else
                     {
-                        if (m_pokemonTeam[bestPokemon].Type  != AppConstants.TipoPokemon.Normal
+                        if (m_pokemonTeam[bestPokemon].Type != AppConstants.TipoPokemon.Normal
                             && m_pokemonTeam[bestPokemon].Type != CurrentPokemonPicked.Type
                             && m_pokemonTeam[bestPokemon].Type != CombatManager.Instance.Player.CurrentPokemonPicked.Type)
                         {
@@ -405,7 +417,7 @@ namespace CleverCrow.Fluid.BTs.Samples
                 }
 
             }
-            if(bestPokemon != -1)
+            if (bestPokemon != -1)
             {
                 return false;
             }
@@ -416,22 +428,26 @@ namespace CleverCrow.Fluid.BTs.Samples
         {
             if (!canKill)
             {
+                float damageCalc = 0;
+                int bestDamage = 0;
                 for (int i = 0; i < CurrentPokemonPicked.Tms.Count; i++)
                 {
-                    float damageCalc = 0;
                     CombatManager.Instance.OnCalculateDamage?.Invoke(CurrentPokemonPicked.Tms[i], CurrentPokemonPicked, CombatManager.Instance.Player.CurrentPokemonPicked, ref damageCalc);
-
+                    //print("Damage calculation is equal to" + damageCalc);
                     int flooredCalc = Mathf.FloorToInt(damageCalc);
-                    if (damageCalc <= flooredCalc)
+                    if (flooredCalc >= bestDamage)
                     {
                         bestTm = i;
-                        damageOfTm = flooredCalc;
+                        bestDamage = flooredCalc;
+                      
                     }
+                    damageCalc = 0;
                 }
+                damageOfTm = bestDamage;
             }
 
             ChooseAction(CurrentPokemonPicked.Tms[bestTm], CombatManager.ActionType.Attack);
-
+            //Debug.LogError("Chose " + CurrentPokemonPicked.Tms[bestTm].Name + " as best attack with type " + CurrentPokemonPicked.Tms[bestTm].TipoDeAtaque);
             return TaskStatus.Success;
         }
         private CleverCrow.Fluid.BTs.Tasks.TaskStatus UseHealingItem()
@@ -440,11 +456,11 @@ namespace CleverCrow.Fluid.BTs.Samples
         }
         private CleverCrow.Fluid.BTs.Tasks.TaskStatus ChangeToBestPokemon()
         {
-            if(bestPokemon == -1)
+            if (bestPokemon == -1)
             {
                 return TaskStatus.Failure;
             }
-            if(m_pokemonTeam[bestPokemon] == m_currentPickedPokemon)
+            if (m_pokemonTeam[bestPokemon] == m_currentPickedPokemon)
             {
                 return TaskStatus.Failure;
             }

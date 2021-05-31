@@ -21,7 +21,7 @@ MonoBehaviour:
   _spDef: 80
   _speed: 120
   _sprite: {fileID: 21300000, guid: e9e46ec2d3bfbe745a207fde88e98855, type: 3}
+  _tm0: {fileID: 11400000, guid: 3f2ad7ea814812e4e856f1b763bdc730, type: 2}
   _tm1: {fileID: 11400000, guid: a689cdb4949046b4cbb8771ee0c4638c, type: 2}
   _tm2: {fileID: 11400000, guid: fb1bc754439c17e469a7738cf68c6fec, type: 2}
   _tm3: {fileID: 11400000, guid: 30b9ebfd272755d40b70c8380bab8701, type: 2}
-  _tm4: {fileID: 11400000, guid: 05d0b96442e3a7d4fb62fdcf1fa01527, type: 2}

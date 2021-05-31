@@ -106,7 +106,8 @@ public class TrainerParent : MonoBehaviour
             m_typeOfActionChosen = typeOfAction;
             m_actionChosen = action;
 
-            CombatManager.Instance.HasPicked();
+            if (isPlayer)
+                CombatManager.Instance.HasPicked();
         }
         //CHANGE UI
     }

@@ -87,6 +87,9 @@ public class CombatManager : PersistentSingleton<CombatManager>
         OnDealDamage -= CalculateTypeCounterDamage;
         OnDealDamage -= CalculateCritChance;
         OnDealDamage -= CalculateMissChance;
+        OnDealDamage -= DealDamage;
+
+        OnEnemyTrainerChanged -= SetNewEnemyTrainer;
 
         OnCalculateDamage -= CalculateBaseMinDamage;
         OnCalculateDamage -= CalculateSTABDamage;

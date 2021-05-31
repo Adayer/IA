@@ -61,25 +61,28 @@ public class PokemonParent : MonoBehaviour
 
         GameObject newTM0 = new GameObject("TM");
         newTM0.transform.parent = this.transform;
-        m_tms[0] = newTM0.AddComponent<TMParent>();
+
+        if (m_tms == null)
+            m_tms = new List<TMParent>();
+        m_tms.Add(newTM0.AddComponent<TMParent>());
         m_tms[0].SetProperties(pkmData._tm0);
         newTM0.name = m_tms[0].Name;
 
         GameObject newTM1= new GameObject("TM");
         newTM1.transform.parent = this.transform;
-        m_tms[1] = newTM1.AddComponent<TMParent>();
+        m_tms.Add(newTM1.AddComponent<TMParent>());
         m_tms[1].SetProperties(pkmData._tm1);
         newTM1.name = m_tms[1].Name;
 
         GameObject newTM2 = new GameObject("TM");
         newTM2.transform.parent = this.transform;
-        m_tms[2] = newTM2.AddComponent<TMParent>();
+        m_tms.Add(newTM2.AddComponent<TMParent>());
         m_tms[2].SetProperties(pkmData._tm2);
         newTM2.name = m_tms[2].Name;
 
         GameObject newTM3 = new GameObject("TM");
         newTM3.transform.parent = this.transform;
-        m_tms[3] = newTM3.AddComponent<TMParent>();
+        m_tms.Add(newTM3.AddComponent<TMParent>());
         m_tms[3].SetProperties(pkmData._tm3);
         newTM3.name = m_tms[3].Name;
 
