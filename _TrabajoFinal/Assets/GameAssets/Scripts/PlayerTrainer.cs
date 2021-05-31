@@ -9,16 +9,21 @@ public class PlayerTrainer : TrainerParent
 {
     public Action OnInitializePlayer;
     bool iSInitializing = true;
+    [SerializeField] Button m_potionButton;
+    [SerializeField] byte m_potions;
+
+    public byte Potions { get => m_potions; }
 
     public override void Initialize(List<SOPokemonStats> pokemonStats)
     {
         base.Initialize(pokemonStats);
+        HealingPotion.OnPotionUsed += () => m_potions--;
         LinkTMButtonsToEvents();
         LinkPokemonChangeButtons();
         OnInitializePlayer?.Invoke();
         CurrentPokemonPicked.OnPokemonPlayerFainted += ButtonsUninteractableAttacks;
         OnPokemonChanged += SetUpButtonInteractivity;
-        
+
     }
 
     private void SetUpButtonInteractivity(PokemonParent newPokemon)
@@ -74,7 +79,7 @@ public class PlayerTrainer : TrainerParent
 
         attButtons[3].GetComponentInChildren<TextMeshProUGUI>().text = newPickedPkmn.Tms[3].Name;
         SetUpColorsTMs(attButtons[3].gameObject.GetComponent<Image>(), newPickedPkmn.Tms[3]);
-        if(!iSInitializing)
+        if (!iSInitializing)
         {
             ButtonsUninteractableAttacks();
         }
@@ -111,7 +116,7 @@ public class PlayerTrainer : TrainerParent
         Button[] pkmButtons = m_parentPokemonPicker.GetComponentsInChildren<Button>();
         for (int i = 0; i < pkmButtons.Length; i++)
         {
-            if(m_pokemonTeam[i] == m_currentPickedPokemon)
+            if (m_pokemonTeam[i] == m_currentPickedPokemon)
             {
                 pkmButtons[i].interactable = false;
             }
@@ -155,24 +160,29 @@ public class PlayerTrainer : TrainerParent
 
     public void DisableUI()
     {
+        m_potionButton.interactable = false;
         ButtonsUninteractableAttacks();
         UninteractableChangePokemonButtons();
     }
     public void DisableChangePokemonButtons()
     {
-        UninteractableChangePokemonButtons();        
+        UninteractableChangePokemonButtons();
     }
     public void EnableChangePokemonButtons()
     {
-        InteractableChangePokemonButtons();        
+        InteractableChangePokemonButtons();
     }
 
     public void EnableUI()
     {
         if (CurrentPokemonPicked.CurrentHP > 0)
             ButtonsInteractableAttacks();
-
+        if (m_potions > 0)
+            m_potionButton.interactable = true;
         InteractableChangePokemonButtons();
     }
-
+    private void OnDisable()
+    {
+        HealingPotion.OnPotionUsed -= () => m_potions--;
+    }
 }

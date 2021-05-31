@@ -19,7 +19,7 @@ public class TrainerParent : MonoBehaviour
     [SerializeField] protected Image m_imgPickedPokemon;
     [SerializeField] protected GameObject m_parentMovePicker;
     [SerializeField] protected GameObject m_parentPokemonPicker;
-
+    
 
     //Eventos y Delegados
     public delegate void TMActions();
