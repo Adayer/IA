@@ -8,7 +8,8 @@ public class PokemonParent : MonoBehaviour
 
     private AppConstants.TipoPokemon m_type;
 
-    public Action OnPokemonFainted;
+    public Action OnPokemonPlayerFainted;
+    public Action OnPokemonEnemyFainted;
     public Action<int> OnHPChanged;
     private int m_maxHp;
     private int m_currentHP;
@@ -20,6 +21,8 @@ public class PokemonParent : MonoBehaviour
     private int m_speed;
 
     private Sprite m_sprite;
+
+    private bool m_hasFainted = false;
 
     private List<TMParent> m_tms = new List<TMParent> (0);
 
@@ -45,6 +48,7 @@ public class PokemonParent : MonoBehaviour
     }
 
     public int MaxHp { get => m_maxHp; }
+    public bool HasFainted { get => m_hasFainted; set => m_hasFainted = value; }
 
     public void SetProperties(SOPokemonStats pkmData)
     {
@@ -116,7 +120,15 @@ public class PokemonParent : MonoBehaviour
     public void Faint()
     {
         Debug.Log(name + " fainted");
-        OnPokemonFainted?.Invoke();
+        if(this == CombatManager.Instance.Player.CurrentPokemonPicked)
+        {
+            OnPokemonPlayerFainted?.Invoke();
+        }
+        else
+        {
+            OnPokemonEnemyFainted?.Invoke();
+            OnPokemonEnemyFainted -= CombatManager.Instance.StopActEnemyFainted;
+        }
     }
 
     public static float GetTypeDamageMultiplier(AppConstants.TipoPokemon attackType, AppConstants.TipoPokemon defenderType)
@@ -135,7 +147,7 @@ public class PokemonParent : MonoBehaviour
             damageMultiplier = 2f;
         }
         else if (attackType == defenderType)
-            damageMultiplier = 0.5f;
+            damageMultiplier = 1;
 
         return damageMultiplier;
     }

@@ -16,6 +16,9 @@ public class CombatManager : PersistentSingleton<CombatManager>
     public TrainerParent trainerThatActsFirst;
     public TrainerParent trainerThatActsSecond;
     [SerializeField] GenericQueue<EnemyTrainerIA> m_enemyTrainerQueue;
+
+    bool m_playerSendingOutNewPokemon = false;
+
     public PlayerTrainer Player { get => m_player; }
     public EnemyTrainerIA Enemy
     {
@@ -34,6 +37,9 @@ public class CombatManager : PersistentSingleton<CombatManager>
     public DamageCalculation OnCalculateDamage;
 
     public event EventHandler<NewTrainerArgs> OnEnemyTrainerChanged;
+
+    public delegate void CombatIsFinished();
+    public CombatIsFinished OnLastPokemonFaint;
     public void HasPicked()
     {
         m_enemy.Act();
@@ -45,19 +51,50 @@ public class CombatManager : PersistentSingleton<CombatManager>
 
     public IEnumerator Act()
     {
-        //Change UI
-        //m_ActionsPanel.transform.position -= Vector3.up*500f;
+        print("-------");
+
         Player.DisableUI();
-        yield return new WaitForSeconds(1f);
-        trainerThatActsFirst.ActionChosen.StartCoroutine(trainerThatActsFirst.ActionChosen.Effect(trainerThatActsFirst));
-        yield return new WaitForSeconds(1f);
-        trainerThatActsSecond.ActionChosen.StartCoroutine(trainerThatActsSecond.ActionChosen.Effect(trainerThatActsSecond));
-        yield return new WaitForSeconds(1f);
+        if (m_playerSendingOutNewPokemon)
+        {
+            Player.ActionChosen.StartCoroutine(Player.ActionChosen.Effect(Player));
+            m_playerSendingOutNewPokemon = false;
+        }
+        else
+        {
+            //Change UI
+            //m_ActionsPanel.transform.position -= Vector3.up*500f;
+            yield return new WaitForSeconds(2f);
+            trainerThatActsFirst.ActionChosen.StartCoroutine(trainerThatActsFirst.ActionChosen.Effect(trainerThatActsFirst));
+            yield return new WaitForSeconds(2f);
+            trainerThatActsSecond.ActionChosen.StartCoroutine(trainerThatActsSecond.ActionChosen.Effect(trainerThatActsSecond));
+            //Show UI Again
+        }
+        yield return new WaitForSeconds(2f);
         Player.EnableUI();
         Player.UpdatePokemonTeam();
-        //Show UI Again
-
     }
+
+    public void StopActEnemyFainted()
+    {
+        StopAllCoroutines();
+        StartCoroutine(IASendNewPokemon());
+    }
+
+    public void StopActPlayerFainted()
+    {
+        StopAllCoroutines();
+        print("Elige un pokemon");
+        Player.EnableChangePokemonButtons();
+        Player.UpdatePokemonTeam();
+        m_playerSendingOutNewPokemon = true;
+    }
+
+    private IEnumerator IASendNewPokemon()
+    {
+        StartCoroutine(m_enemy.SendNewPokemon());
+        yield return new WaitForSeconds(1f);
+    }
+
     private void OnEnable()
     {
         OnDealDamage += CalculateBaseDamage;

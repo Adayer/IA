@@ -2,6 +2,8 @@ using CleverCrow.Fluid.BTs.Tasks;
 using CleverCrow.Fluid.BTs.Tasks.Actions;
 using CleverCrow.Fluid.BTs.Trees;
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace CleverCrow.Fluid.BTs.Samples
 {
@@ -15,6 +17,15 @@ namespace CleverCrow.Fluid.BTs.Samples
         private BehaviorTree _trainerIA;
 
         ChangePokemon m_changePokemonAction = null;
+        float bestPokemonMultiplier = 0f;
+
+
+        int bestTm = 0;
+        int damageOfTm = 0;
+        bool canKill = false;
+
+        int bestPokemon = -1;
+
 
         private void Awake()
         {
@@ -49,15 +60,117 @@ namespace CleverCrow.Fluid.BTs.Samples
             //print("Tree built");
         }
 
+        public override void UpdatePickedPokemon(PokemonParent newPickedPkmn)
+        {
+            if(CurrentPokemonPicked != null)
+            {
+                CurrentPokemonPicked.OnPokemonEnemyFainted -= CombatManager.Instance.StopActEnemyFainted;
+            }
+            base.UpdatePickedPokemon(newPickedPkmn);
+            CurrentPokemonPicked.OnPokemonEnemyFainted += CombatManager.Instance.StopActEnemyFainted;
+        }
+
         public void Act()
         {
             //print("Acting");
             _trainerIA.Tick();
         }
+        public IEnumerator SendNewPokemon()
+        {
+            m_currentPickedPokemon.HasFainted = true;
+            ChooseBestPokemon();
+            if(bestPokemon == -1)
+            {
+                CombatManager.Instance.OnLastPokemonFaint?.Invoke();
+            }
+            else if(bestPokemon >= 0)
+            {
+                StartCoroutine(SwapPokemon());
+            }
+            yield return new WaitForSeconds(1f);
+        }
 
-        int bestTm = 0;
-        int damageOfTm = 0;
-        bool canKill = false;
+        private IEnumerator SwapPokemon()
+        {
+            print("El " + CurrentPokemonPicked.Name + " enemigo ha sido derrotado.");
+            yield return new WaitForSeconds(1f);
+            UpdatePickedPokemon(m_pokemonTeam[bestPokemon]);
+            print("El enemigo lanza a " + CurrentPokemonPicked.Name);
+        }
+
+        
+        private void ChooseBestPokemon()
+        {
+            bestPokemon = -1;
+            for (int i = 0; i < m_pokemonTeam.Count; i++)
+            {
+                if (!m_pokemonTeam[i].HasFainted)
+                {
+                    if (bestPokemon == -1)
+                    {
+                        bestPokemon = i;
+                        bestPokemonMultiplier = PokemonParent.GetTypeDamageMultiplier(m_pokemonTeam[i].Type, CombatManager.Instance.Player.CurrentPokemonPicked.Type);
+                    }
+                    else
+                    {
+                        float pokemonMultiplier = PokemonParent.GetTypeDamageMultiplier(m_pokemonTeam[i].Type, CombatManager.Instance.Player.CurrentPokemonPicked.Type);
+
+                        if(bestPokemonMultiplier == 2)
+                        {
+                            if(pokemonMultiplier == 2)
+                            {
+                                if (Random.value >= 0.5f)
+                                {
+                                    bestPokemon = i;
+                                    bestPokemonMultiplier = PokemonParent.GetTypeDamageMultiplier(m_pokemonTeam[i].Type, CombatManager.Instance.Player.CurrentPokemonPicked.Type);
+                                }
+                            }
+
+                            else if(bestPokemonMultiplier == 1)
+                            {
+                                if(pokemonMultiplier == 2)
+                                {
+                                    bestPokemon = i;
+                                    bestPokemonMultiplier = PokemonParent.GetTypeDamageMultiplier(m_pokemonTeam[i].Type, CombatManager.Instance.Player.CurrentPokemonPicked.Type);
+                                }
+                                else if(pokemonMultiplier == 1)
+                                {
+                                    if(Random.value >= 0.5f)
+                                    {
+                                        bestPokemon = i;
+                                        bestPokemonMultiplier = PokemonParent.GetTypeDamageMultiplier(m_pokemonTeam[i].Type, CombatManager.Instance.Player.CurrentPokemonPicked.Type);
+                                    }
+                                }
+                            }
+                            else if(pokemonMultiplier == 0.5f)
+                            {
+                                if (pokemonMultiplier == 2 || pokemonMultiplier == 1)
+                                {
+                                    bestPokemon = i;
+                                    bestPokemonMultiplier = PokemonParent.GetTypeDamageMultiplier(m_pokemonTeam[i].Type, CombatManager.Instance.Player.CurrentPokemonPicked.Type);
+                                }
+                                else if (pokemonMultiplier == 0.5f)
+                                {
+                                    if (Random.value >= 0.5f)
+                                    {
+                                        bestPokemon = i;
+                                        bestPokemonMultiplier = PokemonParent.GetTypeDamageMultiplier(m_pokemonTeam[i].Type, CombatManager.Instance.Player.CurrentPokemonPicked.Type);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+
+
+            
+
+        
         private bool CalculateIfCanKill(PokemonParent pokemon)
         {
             bestTm = 0;
@@ -148,7 +261,7 @@ namespace CleverCrow.Fluid.BTs.Samples
         }
 
 
-        int bestPokemon = -1;
+        
         private bool CheckIfBetterPokemon()
         {
 
@@ -157,6 +270,10 @@ namespace CleverCrow.Fluid.BTs.Samples
             bestPokemon = -1;
             for (int i = 0; i < m_pokemonTeam.Count; i++)
             {
+                if (m_pokemonTeam[i].HasFainted)
+                {
+                    continue;
+                }
                 if (m_pokemonTeam[i] == CurrentPokemonPicked)
                 {
                     continue;

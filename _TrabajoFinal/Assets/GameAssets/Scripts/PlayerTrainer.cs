@@ -8,6 +8,7 @@ using System;
 public class PlayerTrainer : TrainerParent
 {
     public Action OnInitializePlayer;
+    bool iSInitializing = true;
 
     public override void Initialize()
     {
@@ -15,14 +16,15 @@ public class PlayerTrainer : TrainerParent
         LinkTMButtonsToEvents();
         LinkPokemonChangeButtons();
         OnInitializePlayer?.Invoke();
-        CurrentPokemonPicked.OnPokemonFainted += ButtonsUninteractableAttacks;
+        CurrentPokemonPicked.OnPokemonPlayerFainted += ButtonsUninteractableAttacks;
         OnPokemonChanged += SetUpButtonInteractivity;
+        
     }
 
     private void SetUpButtonInteractivity(PokemonParent newPokemon)
     {
         ButtonsInteractableAttacks();
-        newPokemon.OnPokemonFainted += ButtonsUninteractableAttacks;
+        newPokemon.OnPokemonPlayerFainted += ButtonsUninteractableAttacks;
     }
 
     private void LinkTMButtonsToEvents()
@@ -49,6 +51,11 @@ public class PlayerTrainer : TrainerParent
 
     public override void UpdatePickedPokemon(PokemonParent newPickedPkmn)
     {
+        if (CurrentPokemonPicked != null)
+        {
+            CurrentPokemonPicked.OnPokemonPlayerFainted -= CombatManager.Instance.StopActPlayerFainted;
+        }
+
         base.UpdatePickedPokemon(newPickedPkmn);
 
         m_currentPickedPokemon.SubscribirTMs();
@@ -65,23 +72,24 @@ public class PlayerTrainer : TrainerParent
 
         attButtons[3].GetComponentInChildren<TextMeshProUGUI>().text = newPickedPkmn.Tms[3].Name;
         SetUpColorsTMs(attButtons[3].gameObject.GetComponent<Image>(), newPickedPkmn.Tms[3]);
+        if(!iSInitializing)
+        {
+            ButtonsUninteractableAttacks();
+        }
+
+        CurrentPokemonPicked.OnPokemonPlayerFainted += CombatManager.Instance.StopActPlayerFainted;
     }
 
     public void UpdatePokemonTeam()
     {
         Button[] pkmButtons = m_parentPokemonPicker.GetComponentsInChildren<Button>();
-
+        if (iSInitializing)
+        {
+            InteractableChangePokemonButtons();
+            iSInitializing = false;
+        }
         for (int i = 0; i < pkmButtons.Length; i++)
         {
-            if (m_pokemonTeam[i] == m_currentPickedPokemon || m_pokemonTeam[i].CurrentHP <= 0)
-            {
-                pkmButtons[i].interactable = false;
-            }
-            else if (m_pokemonTeam[i].CurrentHP >= 0)
-            {
-                pkmButtons[i].interactable = true;
-            }
-
             pkmButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = m_pokemonTeam[i].Name;
         }
     }
@@ -101,15 +109,23 @@ public class PlayerTrainer : TrainerParent
         Button[] pkmButtons = m_parentPokemonPicker.GetComponentsInChildren<Button>();
         for (int i = 0; i < pkmButtons.Length; i++)
         {
-            if (pkmButtons[i].GetComponent<ChangePokemon>().Pokemon.CurrentHP > 0 && newState)
+            if(m_pokemonTeam[i] == m_currentPickedPokemon)
+            {
+                pkmButtons[i].interactable = false;
+            }
+            else if (pkmButtons[i].GetComponent<ChangePokemon>().Pokemon.CurrentHP > 0 && newState)
                 pkmButtons[i].interactable = newState;
+            else
+            {
+                pkmButtons[i].interactable = false;
+            }
         }
     }
 
     private void ButtonsUninteractableAttacks()
     {
         ToggleButtonsInteractableAttacks(false);
-        CurrentPokemonPicked.OnPokemonFainted -= ButtonsUninteractableAttacks;
+        CurrentPokemonPicked.OnPokemonPlayerFainted -= ButtonsUninteractableAttacks;
     }
 
     private void ButtonsInteractableAttacks()
@@ -131,6 +147,14 @@ public class PlayerTrainer : TrainerParent
     {
         ButtonsUninteractableAttacks();
         UninteractableChangePokemonButtons();
+    }
+    public void DisableChangePokemonButtons()
+    {
+        UninteractableChangePokemonButtons();        
+    }
+    public void EnableChangePokemonButtons()
+    {
+        InteractableChangePokemonButtons();        
     }
 
     public void EnableUI()

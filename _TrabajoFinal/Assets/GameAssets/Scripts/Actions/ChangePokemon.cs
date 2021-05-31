@@ -14,16 +14,16 @@ public class ChangePokemon : ActionParent
         set
         {
             if (m_pokemon != null && m_isPlayerButton)
-                m_pokemon.OnPokemonFainted -= MakeUninteractable;
+                m_pokemon.OnPokemonPlayerFainted -= MakeUninteractable;
             m_pokemon = value;
             if(m_isPlayerButton)
-                m_pokemon.OnPokemonFainted += MakeUninteractable;
+                m_pokemon.OnPokemonPlayerFainted += MakeUninteractable;
         }
     }
     private void OnDisable()
     {
         if(m_isPlayerButton)
-            m_pokemon.OnPokemonFainted -= MakeUninteractable;
+            m_pokemon.OnPokemonPlayerFainted -= MakeUninteractable;
     }
     void MakeUninteractable()
     {
@@ -32,6 +32,7 @@ public class ChangePokemon : ActionParent
 
     public override IEnumerator Effect(TrainerParent trainer)
     {
+        CombatManager.Instance.Player.UninteractableChangePokemonButtons();
         print(trainer.CurrentPokemonPicked.Name + " vuelve aquí.");
         yield return new WaitForSeconds(0.5f);
         trainer.UpdatePickedPokemon(Pokemon);
