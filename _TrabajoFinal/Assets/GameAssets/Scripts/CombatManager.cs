@@ -28,9 +28,9 @@ public class CombatManager : PersistentSingleton<CombatManager>
         }
     }
 
-    float m_totalDamage;
-    public delegate void DamageCalculation(TMParent tmUsed, PokemonParent attackingPokemon, PokemonParent defendingPokemon);
+    public delegate void DamageCalculation(TMParent tmUsed, PokemonParent attackingPokemon, PokemonParent defendingPokemon, ref float totalD);
 
+    public DamageCalculation OnDealDamage;
     public DamageCalculation OnCalculateDamage;
 
     public event EventHandler<NewTrainerArgs> OnEnemyTrainerChanged;
@@ -60,13 +60,18 @@ public class CombatManager : PersistentSingleton<CombatManager>
     }
     private void OnEnable()
     {
-        OnCalculateDamage += CalculateBaseDamage;
+        OnDealDamage += CalculateBaseDamage;
+        OnDealDamage += CalculateSTABDamage;
+        OnDealDamage += CalculateTypeCounterDamage;
+        OnDealDamage += CalculateCritChance;
+        OnDealDamage += CalculateMissChance;
+        OnDealDamage += DealDamage;
+
+        OnEnemyTrainerChanged += SetNewEnemyTrainer;
+
+        OnCalculateDamage += CalculateBaseMinDamage;
         OnCalculateDamage += CalculateSTABDamage;
         OnCalculateDamage += CalculateTypeCounterDamage;
-        OnCalculateDamage += CalculateCritChance;
-        OnCalculateDamage += CalculateMissChance;
-        OnCalculateDamage += DealDamage;
-        OnEnemyTrainerChanged += SetNewEnemyTrainer;
     }
 
     private void SetNewEnemyTrainer(object sender, NewTrainerArgs trainerArgs)
@@ -77,16 +82,21 @@ public class CombatManager : PersistentSingleton<CombatManager>
 
     private void OnDisable()
     {
-        OnCalculateDamage -= CalculateBaseDamage;
+        OnDealDamage -= CalculateBaseDamage;
+        OnDealDamage -= CalculateSTABDamage;
+        OnDealDamage -= CalculateTypeCounterDamage;
+        OnDealDamage -= CalculateCritChance;
+        OnDealDamage -= CalculateMissChance;
+
+        OnCalculateDamage -= CalculateBaseMinDamage;
         OnCalculateDamage -= CalculateSTABDamage;
         OnCalculateDamage -= CalculateTypeCounterDamage;
-        OnCalculateDamage -= CalculateCritChance;
-        OnCalculateDamage -= CalculateMissChance;
     }
-    private void CalculateBaseDamage(TMParent tmUsed, PokemonParent attackingPokemon, PokemonParent defendingPokemon)
+    private void CalculateBaseDamage(TMParent tmUsed, PokemonParent attackingPokemon, PokemonParent defendingPokemon, ref float totalDamage)
     {
         int attackValue;
         int defenseValue;
+        totalDamage = 0;
         if (tmUsed.TipoDeDaño == AppConstants.TipoDaño.Fisico)
         {
             attackValue = attackingPokemon.Attack;
@@ -97,41 +107,59 @@ public class CombatManager : PersistentSingleton<CombatManager>
             attackValue = attackingPokemon.SpAtt;
             defenseValue = defendingPokemon.SpDef;
         }
-        m_totalDamage = Random.Range(0.85f, 1) * tmUsed.Damage * attackValue / defenseValue;
+        totalDamage = Random.Range(0.85f, 1) * tmUsed.Damage * attackValue / defenseValue;
     }
 
-    private void CalculateSTABDamage(TMParent tmUsed, PokemonParent attackingPokemon, PokemonParent defendingPokemon)
+    private void CalculateBaseMinDamage(TMParent tmUsed, PokemonParent attackingPokemon, PokemonParent defendingPokemon, ref float totalDamage)
+    {
+        int attackValue;
+        int defenseValue;
+        totalDamage = 0;
+        if (tmUsed.TipoDeDaño == AppConstants.TipoDaño.Fisico)
+        {
+            attackValue = attackingPokemon.Attack;
+            defenseValue = defendingPokemon.Defense;
+        }
+        else
+        {
+            attackValue = attackingPokemon.SpAtt;
+            defenseValue = defendingPokemon.SpDef;
+        }
+        totalDamage = 0.85f * tmUsed.Damage * attackValue / defenseValue;
+    }
+
+    private void CalculateSTABDamage(TMParent tmUsed, PokemonParent attackingPokemon, PokemonParent defendingPokemon, ref float totalDamage)
     {
         if (attackingPokemon.Type == tmUsed.TipoDeAtaque)
         {
-            m_totalDamage *= 1.2f;
+            totalDamage *= 1.2f;
         }
     }
 
-    private void CalculateTypeCounterDamage(TMParent tmUsed, PokemonParent attackingPokemon, PokemonParent defendingPokemon)
-    {        
-        m_totalDamage *= PokemonParent.GetTypeDamageMultiplier(tmUsed.TipoDeAtaque, defendingPokemon.Type);
+    private void CalculateTypeCounterDamage(TMParent tmUsed, PokemonParent attackingPokemon, PokemonParent defendingPokemon, ref float totalDamage)
+    {
+        totalDamage *= PokemonParent.GetTypeDamageMultiplier(tmUsed.TipoDeAtaque, defendingPokemon.Type);
     }
 
-    private void CalculateCritChance(TMParent tmUsed, PokemonParent attackingPokemon, PokemonParent defendingPokemon)
+    private void CalculateCritChance(TMParent tmUsed, PokemonParent attackingPokemon, PokemonParent defendingPokemon, ref float totalDamage)
     {
         if (Random.value * 100 > tmUsed.CritChance)
         {
-            m_totalDamage *= 1.5f;
+            totalDamage *= 1.5f;
         }
     }
 
-    private void CalculateMissChance(TMParent tmUsed, PokemonParent attackingPokemon, PokemonParent defendingPokemon)
+    private void CalculateMissChance(TMParent tmUsed, PokemonParent attackingPokemon, PokemonParent defendingPokemon, ref float totalDamage)
     {
         if (Random.value >= tmUsed.Accuracy)
         {
-            m_totalDamage = 0;
+            totalDamage = 0;
         }
     }
 
-    private void DealDamage(TMParent tmUsed, PokemonParent attackingPokemon, PokemonParent defendingPokemon)
+    private void DealDamage(TMParent tmUsed, PokemonParent attackingPokemon, PokemonParent defendingPokemon, ref float totalDamage)
     {
-        defendingPokemon.TakeDamage(Mathf.FloorToInt(m_totalDamage));
+        defendingPokemon.TakeDamage(Mathf.FloorToInt(totalDamage));
     }
     public void SetUpOrder()
     {

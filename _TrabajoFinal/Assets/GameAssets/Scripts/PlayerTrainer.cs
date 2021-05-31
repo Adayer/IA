@@ -54,17 +54,17 @@ public class PlayerTrainer : TrainerParent
         m_currentPickedPokemon.SubscribirTMs();
         Button[] attButtons = m_parentMovePicker.GetComponentsInChildren<Button>();
 
-        attButtons[0].GetComponentInChildren<TextMeshProUGUI>().text = newPickedPkmn.Tm1.Name;
-        SetUpColorsTMs(attButtons[0].gameObject.GetComponent<Image>(), newPickedPkmn.Tm1);
+        attButtons[0].GetComponentInChildren<TextMeshProUGUI>().text = newPickedPkmn.Tms[0].Name;
+        SetUpColorsTMs(attButtons[0].gameObject.GetComponent<Image>(), newPickedPkmn.Tms[0]);
 
-        attButtons[1].GetComponentInChildren<TextMeshProUGUI>().text = newPickedPkmn.Tm2.Name;
-        SetUpColorsTMs(attButtons[1].gameObject.GetComponent<Image>(), newPickedPkmn.Tm2);
+        attButtons[1].GetComponentInChildren<TextMeshProUGUI>().text = newPickedPkmn.Tms[1].Name;
+        SetUpColorsTMs(attButtons[1].gameObject.GetComponent<Image>(), newPickedPkmn.Tms[1]);
 
-        attButtons[2].GetComponentInChildren<TextMeshProUGUI>().text = newPickedPkmn.Tm3.Name;
-        SetUpColorsTMs(attButtons[2].gameObject.GetComponent<Image>(), newPickedPkmn.Tm3);
+        attButtons[2].GetComponentInChildren<TextMeshProUGUI>().text = newPickedPkmn.Tms[2].Name;
+        SetUpColorsTMs(attButtons[2].gameObject.GetComponent<Image>(), newPickedPkmn.Tms[2]);
 
-        attButtons[3].GetComponentInChildren<TextMeshProUGUI>().text = newPickedPkmn.Tm4.Name;
-        SetUpColorsTMs(attButtons[3].gameObject.GetComponent<Image>(), newPickedPkmn.Tm4);
+        attButtons[3].GetComponentInChildren<TextMeshProUGUI>().text = newPickedPkmn.Tms[3].Name;
+        SetUpColorsTMs(attButtons[3].gameObject.GetComponent<Image>(), newPickedPkmn.Tms[3]);
     }
 
     public void UpdatePokemonTeam()

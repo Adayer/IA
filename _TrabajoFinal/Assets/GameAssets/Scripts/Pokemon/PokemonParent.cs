@@ -21,21 +21,13 @@ public class PokemonParent : MonoBehaviour
 
     private Sprite m_sprite;
 
-    private TMParent m_tm1;
-    private TMParent m_tm2;
-    private TMParent m_tm3;
-    private TMParent m_tm4;
+    private List<TMParent> m_tms = new List<TMParent> (0);
 
     public int Speed { get => m_speed; }
     public string Name { get => m_name; set => m_name = value; }
     public AppConstants.TipoPokemon Type { get => m_type; set => m_type = value; }
     public Sprite Sprite { get => m_sprite; set => m_sprite = value; }
-
-    public TMParent Tm1 { get => m_tm1; set => m_tm1 = value; }
-    public TMParent Tm2 { get => m_tm2; set => m_tm2 = value; }
-    public TMParent Tm3 { get => m_tm3; set => m_tm3 = value; }
-    public TMParent Tm4 { get => m_tm4; set => m_tm4 = value; }
-
+    public List<TMParent> Tms { get => m_tms; set => m_tms = value; }
 
     public int Attack { get => m_attack; set => m_attack = value; }
     public int Defense { get => m_defense; set => m_defense = value; }
@@ -67,45 +59,46 @@ public class PokemonParent : MonoBehaviour
         m_speed = pkmData._speed;
         m_sprite = pkmData._sprite;
 
+        GameObject newTM0 = new GameObject("TM");
+        newTM0.transform.parent = this.transform;
+        m_tms[0] = newTM0.AddComponent<TMParent>();
+        m_tms[0].SetProperties(pkmData._tm0);
+        newTM0.name = m_tms[0].Name;
+
         GameObject newTM1= new GameObject("TM");
         newTM1.transform.parent = this.transform;
-        m_tm1 = newTM1.AddComponent<TMParent>();
-        m_tm1.SetProperties(pkmData._tm1);
-        newTM1.name = m_tm1.Name;
+        m_tms[1] = newTM1.AddComponent<TMParent>();
+        m_tms[1].SetProperties(pkmData._tm1);
+        newTM1.name = m_tms[1].Name;
 
         GameObject newTM2 = new GameObject("TM");
         newTM2.transform.parent = this.transform;
-        m_tm2 = newTM2.AddComponent<TMParent>();
-        m_tm2.SetProperties(pkmData._tm2);
-        newTM2.name = m_tm2.Name;
+        m_tms[2] = newTM2.AddComponent<TMParent>();
+        m_tms[2].SetProperties(pkmData._tm2);
+        newTM2.name = m_tms[2].Name;
 
         GameObject newTM3 = new GameObject("TM");
         newTM3.transform.parent = this.transform;
-        m_tm3 = newTM3.AddComponent<TMParent>();
-        m_tm3.SetProperties(pkmData._tm3);
-        newTM3.name = m_tm3.Name;
+        m_tms[3] = newTM3.AddComponent<TMParent>();
+        m_tms[3].SetProperties(pkmData._tm3);
+        newTM3.name = m_tms[3].Name;
 
-        GameObject newTM4 = new GameObject("TM");
-        newTM4.transform.parent = this.transform;
-        m_tm4 = newTM4.AddComponent<TMParent>();
-        m_tm4.SetProperties(pkmData._tm4);
-        newTM4.name = m_tm4.Name;
     }
 
     public void SubscribirTMs()
     {
-        CombatManager.Instance.Player.OnTM1 += Tm1.Act;
-        CombatManager.Instance.Player.OnTM2 += Tm2.Act;
-        CombatManager.Instance.Player.OnTM3 += Tm3.Act;
-        CombatManager.Instance.Player.OnTM4 += Tm4.Act;
+        CombatManager.Instance.Player.OnTM0 += m_tms[0].Act;
+        CombatManager.Instance.Player.OnTM1 += m_tms[1].Act;
+        CombatManager.Instance.Player.OnTM2 += m_tms[2].Act;
+        CombatManager.Instance.Player.OnTM3 += m_tms[3].Act;
     }
 
     public void DesubscribirTMs()
     {
-        CombatManager.Instance.Player.OnTM1 -= Tm1.Act;
-        CombatManager.Instance.Player.OnTM2 -= Tm2.Act;
-        CombatManager.Instance.Player.OnTM3 -= Tm3.Act;
-        CombatManager.Instance.Player.OnTM4 -= Tm4.Act;
+        CombatManager.Instance.Player.OnTM0 -= m_tms[0].Act;
+        CombatManager.Instance.Player.OnTM1 -= m_tms[1].Act;
+        CombatManager.Instance.Player.OnTM2 -= m_tms[2].Act;
+        CombatManager.Instance.Player.OnTM3 -= m_tms[3].Act;
     }
 
     public void TakeDamage(int amount)

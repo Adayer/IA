@@ -23,10 +23,10 @@ public class TrainerParent : MonoBehaviour
 
     //Eventos y Delegados
     public delegate void TMActions();
+    public event TMActions OnTM0;
     public event TMActions OnTM1;
     public event TMActions OnTM2;
     public event TMActions OnTM3;
-    public event TMActions OnTM4;
 
     //Properties
     public CombatManager.ActionType TypeOfActionChosen { get => m_typeOfActionChosen; }
@@ -95,7 +95,7 @@ public class TrainerParent : MonoBehaviour
     protected void TriggerTM1() { OnTM1?.Invoke(); }
     protected void TriggerTM2() { OnTM2?.Invoke(); }
     protected void TriggerTM3() { OnTM3?.Invoke(); }
-    protected void TriggerTM4() { OnTM4?.Invoke(); }
+    protected void TriggerTM4() { OnTM0?.Invoke(); }
     #endregion
 
     #region Metodos de acción

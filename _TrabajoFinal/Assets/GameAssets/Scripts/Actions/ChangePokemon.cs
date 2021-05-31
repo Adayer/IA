@@ -6,21 +6,24 @@ using UnityEngine.UI;
 public class ChangePokemon : ActionParent
 {
     private PokemonParent m_pokemon;
+    [SerializeField] private bool m_isPlayerButton = true;
 
     public PokemonParent Pokemon
     {
         get => m_pokemon;
         set
         {
-            if (m_pokemon != null)
+            if (m_pokemon != null && m_isPlayerButton)
                 m_pokemon.OnPokemonFainted -= MakeUninteractable;
             m_pokemon = value;
-            m_pokemon.OnPokemonFainted += MakeUninteractable;
+            if(m_isPlayerButton)
+                m_pokemon.OnPokemonFainted += MakeUninteractable;
         }
     }
     private void OnDisable()
     {
-        m_pokemon.OnPokemonFainted -= MakeUninteractable;
+        if(m_isPlayerButton)
+            m_pokemon.OnPokemonFainted -= MakeUninteractable;
     }
     void MakeUninteractable()
     {

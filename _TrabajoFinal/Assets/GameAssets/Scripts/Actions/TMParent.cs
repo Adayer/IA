@@ -23,13 +23,14 @@ public class TMParent : ActionParent
     {
         print(attacker.CurrentPokemonPicked + " utilizó " + m_name);
         yield return new WaitForSeconds(0.5f);
+        float totalDamage = 0;
         if (attacker == CombatManager.Instance.Player)
         {
-            CombatManager.Instance.OnCalculateDamage?.Invoke(this, attacker.CurrentPokemonPicked, CombatManager.Instance.Enemy.CurrentPokemonPicked);
+            CombatManager.Instance.OnDealDamage?.Invoke(this, attacker.CurrentPokemonPicked, CombatManager.Instance.Enemy.CurrentPokemonPicked, ref totalDamage);
         }
         else
         {
-            CombatManager.Instance.OnCalculateDamage?.Invoke(this, attacker.CurrentPokemonPicked, CombatManager.Instance.Player.CurrentPokemonPicked);
+            CombatManager.Instance.OnDealDamage?.Invoke(this, attacker.CurrentPokemonPicked, CombatManager.Instance.Player.CurrentPokemonPicked, ref totalDamage);
         }
     }
 

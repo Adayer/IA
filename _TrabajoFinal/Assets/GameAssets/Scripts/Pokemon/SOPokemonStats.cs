@@ -19,8 +19,8 @@ public class SOPokemonStats : ScriptableObject
 
     public Sprite _sprite;
 
+    public TMSO _tm0;
     public TMSO _tm1;
     public TMSO _tm2;
     public TMSO _tm3;
-    public TMSO _tm4;
 }
