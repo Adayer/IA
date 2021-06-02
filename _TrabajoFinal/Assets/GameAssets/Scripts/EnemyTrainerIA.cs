@@ -10,7 +10,7 @@ namespace CleverCrow.Fluid.BTs.Samples
     /// <summary>
     /// Example script to test out BehaviorTrees, not actually compiled into the released package
     /// </summary>
-    [RequireComponent(typeof(ChangePokemon))]
+    [RequireComponent(typeof(ChangePokemon), typeof(HealingPotion))]
     public class EnemyTrainerIA : TrainerParent
     {
         [SerializeField]
@@ -25,7 +25,8 @@ namespace CleverCrow.Fluid.BTs.Samples
         bool canKill = false;
 
         int bestPokemon = -1;
-        byte m_potions;
+        HealingPotion m_healingPotion;
+        byte m_potions = 1;
         byte m_currentPotion;
         byte m_cooldownCambiar = 2;
         byte m_currentCDCambiar;
@@ -35,6 +36,8 @@ namespace CleverCrow.Fluid.BTs.Samples
         {
             HealingPotion.OnPotionUsed += () => m_currentPotion--;
             m_changePokemonAction = this.GetComponent<ChangePokemon>();
+            m_healingPotion = this.GetComponent<HealingPotion>();
+            m_currentPotion = m_potions;
 
             _trainerIA = new BehaviorTreeBuilder(gameObject)
             .Selector()
@@ -77,7 +80,6 @@ namespace CleverCrow.Fluid.BTs.Samples
 
         public void Act()
         {
-            print(this.gameObject.name + " Acting");
             if(m_currentCDCambiar > 0)
             {
                 m_currentCDCambiar--;
@@ -204,7 +206,6 @@ namespace CleverCrow.Fluid.BTs.Samples
                 {
                     if(bestTm == -1)
                     {
-                        print(bestTm + " = " + i);
                         bestTm = i;
                         damageOfTm = flooredCalc;
                         canKill = true;
@@ -225,13 +226,17 @@ namespace CleverCrow.Fluid.BTs.Samples
         {
             if (CurrentPokemonPicked.CurrentHP <= CurrentPokemonPicked.MaxHp * 0.3f)
             {
-                return false;
+                return true;
             }
             return false;
         }
 
         private bool CheckIfHasHealingItems()
         {
+            if(m_currentPotion > 0)
+            {
+                return true;
+            }
             return false;
         }
 
@@ -799,6 +804,8 @@ namespace CleverCrow.Fluid.BTs.Samples
         }
         private CleverCrow.Fluid.BTs.Tasks.TaskStatus UseHealingItem()
         {
+            ChooseAction(m_healingPotion, CombatManager.ActionType.UseItem);
+            m_currentPotion--;
             return TaskStatus.Success;
         }
         private CleverCrow.Fluid.BTs.Tasks.TaskStatus ChangeToBestPokemon()
