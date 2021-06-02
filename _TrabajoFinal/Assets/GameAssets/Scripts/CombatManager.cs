@@ -186,7 +186,7 @@ public class CombatManager : PersistentSingleton<CombatManager>
 
     private void CalculateCritChance(TMParent tmUsed, PokemonParent attackingPokemon, PokemonParent defendingPokemon, ref float totalDamage)
     {
-        if (Random.value * 100 > tmUsed.CritChance)
+        if (Random.value < 0.0625f * tmUsed.CritChanceMultiplier)
         {
             totalDamage *= 1.5f;
         }

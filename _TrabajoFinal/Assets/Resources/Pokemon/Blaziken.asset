@@ -24,5 +24,5 @@ MonoBehaviour:
   _sprite2: {fileID: 21300000, guid: 3d3fd4823a6a90e44ba20f492b958905, type: 3}
   _tm0: {fileID: 11400000, guid: e3d652a3836e5764284d6c63d527e69b, type: 2}
   _tm1: {fileID: 11400000, guid: d2ce5aeae1c174b459d5a25d5fcef5a3, type: 2}
-  _tm2: {fileID: 11400000, guid: fb1bc754439c17e469a7738cf68c6fec, type: 2}
+  _tm2: {fileID: 11400000, guid: a689cdb4949046b4cbb8771ee0c4638c, type: 2}
   _tm3: {fileID: 11400000, guid: 05d0b96442e3a7d4fb62fdcf1fa01527, type: 2}

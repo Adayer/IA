@@ -49,7 +49,6 @@ public class TrainerParent : MonoBehaviour
     public virtual void Initialize(List<SOPokemonStats> pokemonStats)
     {
         InitPokemons(pokemonStats);
-
     }
 
     #region Metodos de inicialización

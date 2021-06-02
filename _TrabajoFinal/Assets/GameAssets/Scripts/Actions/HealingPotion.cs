@@ -8,6 +8,7 @@ using TMPro;
 public class HealingPotion : ActionParent, Interfaces.IConsumible
 {
     public static Action OnPotionUsed;
+    public static Action OnIAPotionUsed;
 
     private void Start()
     {
@@ -17,20 +18,28 @@ public class HealingPotion : ActionParent, Interfaces.IConsumible
     public override IEnumerator Effect(TrainerParent trainer)
     {
         CombatManager.Instance.Player.DisableUI();
-        print("Se ha curado a "+trainer.CurrentPokemonPicked.Name + " toda la vida.");
+        print("Se ha curado a "+ trainer.CurrentPokemonPicked.Name + " toda la vida.");
         yield return new WaitForSeconds(0.5f);
         if (trainer is PlayerTrainer)
         {
             ((PlayerTrainer)trainer).UpdatePokemonTeam();
         }
         ;
-        Use();
+        Use(trainer);
     }
 
-    public void Use()
+    public void Use(TrainerParent trainer)
     {
-        CombatManager.Instance.Player.CurrentPokemonPicked.Heal(9999);
-        OnPotionUsed?.Invoke();
-        GetComponentInChildren<TextMeshProUGUI>().text = "Use healing potion (" + CombatManager.Instance.Player.Potions + " left)";
+        if (trainer is PlayerTrainer)
+        {
+            CombatManager.Instance.Player.CurrentPokemonPicked.Heal(9999);
+            OnPotionUsed?.Invoke();
+            GetComponentInChildren<TextMeshProUGUI>().text = "Use healing potion (" + CombatManager.Instance.Player.Potions + " left)";
+        }
+        else
+        {
+            CombatManager.Instance.Enemy.CurrentPokemonPicked.Heal(9999);
+            OnIAPotionUsed?.Invoke();
+        }
     }
 }

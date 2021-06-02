@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class PokemonHealthBar : MonoBehaviour
 {
     [SerializeField] bool isPlayerPokemonHP;
+    [SerializeField] private TextMeshProUGUI m_textHP;
     PokemonParent currentPokemonInDisplay;
     Image hpBar;
     private void Start()
@@ -44,6 +46,7 @@ public class PokemonHealthBar : MonoBehaviour
     private void UpdateHealth(int newHealth)
     {
         hpBar.fillAmount = (float)newHealth / currentPokemonInDisplay.MaxHp;
+        m_textHP.text = newHealth.ToString();
     }
 
     private void UpdatePokemonReference(PokemonParent newPokemon)

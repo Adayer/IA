@@ -12,6 +12,6 @@ public class Interfaces
 
     public interface IConsumible
     {
-        void Use();
+        void Use(TrainerParent trainer);
     }
 }
