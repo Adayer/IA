@@ -25,16 +25,18 @@ namespace CleverCrow.Fluid.BTs.Samples
         bool canKill = false;
 
         int bestPokemon = -1;
-        [SerializeField] byte m_potions;
+        byte m_potions;
         byte m_currentPotion;
+        byte m_cooldownCambiar = 2;
+        byte m_currentCDCambiar;
 
 
         private void Awake()
         {
             HealingPotion.OnPotionUsed += () => m_currentPotion--;
+            m_changePokemonAction = this.GetComponent<ChangePokemon>();
 
             _trainerIA = new BehaviorTreeBuilder(gameObject)
-
             .Selector()
                 .Sequence()
                     .Condition("Can KO?", () => CalculateIfCanKill(CurrentPokemonPicked))
@@ -76,6 +78,10 @@ namespace CleverCrow.Fluid.BTs.Samples
         public void Act()
         {
             print(this.gameObject.name + " Acting");
+            if(m_currentCDCambiar > 0)
+            {
+                m_currentCDCambiar--;
+            }
             _trainerIA.Tick();
         }
         public IEnumerator SendNewPokemon()
@@ -107,7 +113,7 @@ namespace CleverCrow.Fluid.BTs.Samples
             print("El enemigo lanza a " + CurrentPokemonPicked.Name);
         }
 
-        
+        //Se llama a este metodo cuando un pokemon cae insconsciente y quedan pokemons
         private void ChooseBestPokemon()
         {
             bestPokemon = -1;
@@ -124,9 +130,9 @@ namespace CleverCrow.Fluid.BTs.Samples
                     {
                         float pokemonMultiplier = PokemonParent.GetTypeDamageMultiplier(m_pokemonTeam[i].Type, CombatManager.Instance.Player.CurrentPokemonPicked.Type);
 
-                        if(bestPokemonMultiplier == 2)
+                        if (pokemonMultiplier == 2)
                         {
-                            if(pokemonMultiplier == 2)
+                            if(bestPokemonMultiplier == 2)
                             {
                                 if (Random.value >= 0.5f)
                                 {
@@ -134,52 +140,53 @@ namespace CleverCrow.Fluid.BTs.Samples
                                     bestPokemonMultiplier = PokemonParent.GetTypeDamageMultiplier(m_pokemonTeam[i].Type, CombatManager.Instance.Player.CurrentPokemonPicked.Type);
                                 }
                             }
-
-                            else if(bestPokemonMultiplier == 1)
+                            else
                             {
-                                if(pokemonMultiplier == 2)
+                                bestPokemon = i;
+                                bestPokemonMultiplier = PokemonParent.GetTypeDamageMultiplier(m_pokemonTeam[i].Type, CombatManager.Instance.Player.CurrentPokemonPicked.Type);
+                            }
+                            continue;
+                        }
+                        else if (pokemonMultiplier == 1)
+                        {
+                            if(bestPokemonMultiplier == 1)
+                            {
+                                if (Random.value >= 0.5f)
                                 {
                                     bestPokemon = i;
                                     bestPokemonMultiplier = PokemonParent.GetTypeDamageMultiplier(m_pokemonTeam[i].Type, CombatManager.Instance.Player.CurrentPokemonPicked.Type);
-                                }
-                                else if(pokemonMultiplier == 1)
-                                {
-                                    if(Random.value >= 0.5f)
-                                    {
-                                        bestPokemon = i;
-                                        bestPokemonMultiplier = PokemonParent.GetTypeDamageMultiplier(m_pokemonTeam[i].Type, CombatManager.Instance.Player.CurrentPokemonPicked.Type);
-                                    }
                                 }
                             }
-                            else if(pokemonMultiplier == 0.5f)
+                            if(bestPokemonMultiplier == 0.5f)
                             {
-                                if (pokemonMultiplier == 2 || pokemonMultiplier == 1)
+                                bestPokemon = i;
+                                bestPokemonMultiplier = PokemonParent.GetTypeDamageMultiplier(m_pokemonTeam[i].Type, CombatManager.Instance.Player.CurrentPokemonPicked.Type);
+                            }
+                            else
+                            {
+                                continue;
+                            }
+                        }
+                        else if (pokemonMultiplier == 0.5f)
+                        {
+                            if (bestPokemonMultiplier == 0.5f)
+                            {
+                                if (Random.value >= 0.5f)
                                 {
                                     bestPokemon = i;
                                     bestPokemonMultiplier = PokemonParent.GetTypeDamageMultiplier(m_pokemonTeam[i].Type, CombatManager.Instance.Player.CurrentPokemonPicked.Type);
                                 }
-                                else if (pokemonMultiplier == 0.5f)
-                                {
-                                    if (Random.value >= 0.5f)
-                                    {
-                                        bestPokemon = i;
-                                        bestPokemonMultiplier = PokemonParent.GetTypeDamageMultiplier(m_pokemonTeam[i].Type, CombatManager.Instance.Player.CurrentPokemonPicked.Type);
-                                    }
-                                }
+                            }
+                            else
+                            {
+                                continue;
                             }
                         }
                     }
                 }
             }
         }
-
-
-
-
-
-            
-
-        
+                
         private bool CalculateIfCanKill(PokemonParent pokemon)
         {
             bestTm = -1;
@@ -230,7 +237,6 @@ namespace CleverCrow.Fluid.BTs.Samples
 
         private bool CheckTypeMatchUp(PokemonParent pokemonToCheck) // Returns true is supereffective or neutral
         {
-            Debug.LogWarning("Player type: " + CombatManager.Instance.Player.CurrentPokemonPicked.Type + "IA type: " + pokemonToCheck.Type);
             bool isGood = false;
             if (pokemonToCheck.Type == AppConstants.TipoPokemon.Normal
                 || CombatManager.Instance.Player.CurrentPokemonPicked.Type == AppConstants.TipoPokemon.Normal)
@@ -284,14 +290,15 @@ namespace CleverCrow.Fluid.BTs.Samples
                 }
             }
             
-            Debug.LogWarning("IA vs Player is good = " + isGood);
             return isGood;
         }
 
-
-        
         private bool CheckIfBetterPokemon()
         {
+            if(m_currentCDCambiar > 0)
+            {
+                return false;
+            }
             bool bestPokemonCanKill = false;
 
             bestPokemon = -1;
@@ -312,16 +319,99 @@ namespace CleverCrow.Fluid.BTs.Samples
                 {
                     continue;
                 }
-
+               
                 bool canKill = CalculateIfCanKill(m_pokemonTeam[i]);
 
-                Debug.LogWarning("Checking if " + m_pokemonTeam[i].Name + " is better.");
-                if (m_pokemonTeam[i].Type != AppConstants.TipoPokemon.Normal)
+                if(CombatManager.Instance.Player.CurrentPokemonPicked.Type == AppConstants.TipoPokemon.Normal)
                 {
-                    Debug.LogWarning("Is not Normal Type");
+                    if (bestPokemon == -1)
+                    {
+                        if (m_pokemonTeam[i].CurrentHP >= m_pokemonTeam[i].MaxHp * 0.5f)
+                        {
+                            bestPokemon = i;
+                            bestPokemonCanKill = canKill;
+                        }
+                    }
+                    else
+                    {
+                        if (m_pokemonTeam[i].CurrentHP >= m_pokemonTeam[i].MaxHp * 0.5f)
+                        {
+                            if (bestPokemonCanKill)
+                            {
+                                if (canKill)
+                                {
+                                    if (m_pokemonTeam[i].Speed >= CombatManager.Instance.Player.CurrentPokemonPicked.Speed
+                                                && m_pokemonTeam[i].Speed >= CombatManager.Instance.Player.CurrentPokemonPicked.Speed)
+                                    {
+                                        if (m_pokemonTeam[i].CurrentHP >= m_pokemonTeam[bestPokemon].CurrentHP)
+                                        {
+                                            bestPokemon = i;
+                                            bestPokemonCanKill = canKill;
+                                        }
+                                    }
+                                    else if (m_pokemonTeam[i].Speed < CombatManager.Instance.Player.CurrentPokemonPicked.Speed
+                                        && m_pokemonTeam[bestPokemon].Speed < CombatManager.Instance.Player.CurrentPokemonPicked.Speed)
+                                    {
+                                        if (m_pokemonTeam[i].CurrentHP >= m_pokemonTeam[bestPokemon].CurrentHP)
+                                        {
+                                            bestPokemon = i;
+                                            bestPokemonCanKill = canKill;
+                                        }
+                                    }
+                                    else if (m_pokemonTeam[i].Speed >= CombatManager.Instance.Player.CurrentPokemonPicked.Speed
+                                        && m_pokemonTeam[bestPokemon].Speed < CombatManager.Instance.Player.CurrentPokemonPicked.Speed)
+                                    {
+                                        bestPokemon = i;
+                                        bestPokemonCanKill = canKill;
+                                    }
+                                }
+                                else
+                                {
+                                    continue;
+                                }
+                            }
+                            else
+                            {
+                                if (canKill)
+                                {
+                                    bestPokemon = i;
+                                    bestPokemonCanKill = canKill;
+                                }
+                                else
+                                {
+                                    if (m_pokemonTeam[i].Speed >= CombatManager.Instance.Player.CurrentPokemonPicked.Speed
+                                                && m_pokemonTeam[i].Speed >= CombatManager.Instance.Player.CurrentPokemonPicked.Speed)
+                                    {
+                                        if (m_pokemonTeam[i].CurrentHP >= m_pokemonTeam[bestPokemon].CurrentHP)
+                                        {
+                                            bestPokemon = i;
+                                            bestPokemonCanKill = canKill;
+                                        }
+                                    }
+                                    else if (m_pokemonTeam[i].Speed < CombatManager.Instance.Player.CurrentPokemonPicked.Speed
+                                        && m_pokemonTeam[bestPokemon].Speed < CombatManager.Instance.Player.CurrentPokemonPicked.Speed)
+                                    {
+                                        if (m_pokemonTeam[i].CurrentHP >= m_pokemonTeam[bestPokemon].CurrentHP)
+                                        {
+                                            bestPokemon = i;
+                                            bestPokemonCanKill = canKill;
+                                        }
+                                    }
+                                    else if (m_pokemonTeam[i].Speed >= CombatManager.Instance.Player.CurrentPokemonPicked.Speed
+                                        && m_pokemonTeam[bestPokemon].Speed < CombatManager.Instance.Player.CurrentPokemonPicked.Speed)
+                                    {
+                                        bestPokemon = i;
+                                        bestPokemonCanKill = canKill;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (m_pokemonTeam[i].Type != AppConstants.TipoPokemon.Normal)
+                {
                     if (m_pokemonTeam[i].Type != CombatManager.Instance.Player.CurrentPokemonPicked.Type)
                     {
-                        Debug.LogWarning("Is not same Type as current pokemon");
                         if (bestPokemon == -1)
                         {
                             if (m_pokemonTeam[i].CurrentHP >= m_pokemonTeam[i].MaxHp * 0.5f)
@@ -345,10 +435,46 @@ namespace CleverCrow.Fluid.BTs.Samples
                                         if (m_pokemonTeam[i].CurrentHP >= m_pokemonTeam[i].MaxHp * 0.5f)
                                         {
                                             if (m_pokemonTeam[i].Speed >= CombatManager.Instance.Player.CurrentPokemonPicked.Speed
-                                                && m_pokemonTeam[i].Speed > m_pokemonTeam[bestPokemon].Speed)
+                                                && m_pokemonTeam[i].Speed >= CombatManager.Instance.Player.CurrentPokemonPicked.Speed)
                                             {
-                                                bestPokemon = i;
-                                                bestPokemonCanKill = canKill;
+                                                if (m_pokemonTeam[i].Type != m_pokemonTeam[bestPokemon].Type)
+                                                {
+                                                    if (m_pokemonTeam[bestPokemon].Type == CurrentPokemonPicked.Type)
+                                                    {
+                                                        if (m_pokemonTeam[i].CurrentHP * 1.5f > m_pokemonTeam[bestPokemon].CurrentHP * 0.75f)
+                                                        {
+                                                            bestPokemon = i;
+                                                            bestPokemonCanKill = canKill;
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (m_pokemonTeam[i].CurrentHP * 1.5f > m_pokemonTeam[bestPokemon].CurrentHP)
+                                                        {
+                                                            bestPokemon = i;
+                                                            bestPokemonCanKill = canKill;
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    if (m_pokemonTeam[bestPokemon].Type == CurrentPokemonPicked.Type)
+                                                    {
+                                                        if (m_pokemonTeam[i].CurrentHP > m_pokemonTeam[bestPokemon].CurrentHP)
+                                                        {
+                                                            bestPokemon = i;
+                                                            bestPokemonCanKill = canKill;
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (m_pokemonTeam[i].CurrentHP * 0.75f > m_pokemonTeam[bestPokemon].CurrentHP)
+                                                        {
+                                                            bestPokemon = i;
+                                                            bestPokemonCanKill = canKill;
+                                                        }
+                                                    }
+                                                }
                                             }
                                             else if (m_pokemonTeam[i].Speed < CombatManager.Instance.Player.CurrentPokemonPicked.Speed
                                                 && m_pokemonTeam[bestPokemon].Speed < CombatManager.Instance.Player.CurrentPokemonPicked.Speed)
@@ -374,47 +500,53 @@ namespace CleverCrow.Fluid.BTs.Samples
                                                 }
                                                 else
                                                 {
-                                                    if (m_pokemonTeam[i].CurrentHP > m_pokemonTeam[bestPokemon].CurrentHP)
+                                                    if (m_pokemonTeam[bestPokemon].Type == CurrentPokemonPicked.Type)
                                                     {
-                                                        bestPokemon = i;
-                                                        bestPokemonCanKill = canKill;
+                                                        if (m_pokemonTeam[i].CurrentHP > m_pokemonTeam[bestPokemon].CurrentHP)
+                                                        {
+                                                            bestPokemon = i;
+                                                            bestPokemonCanKill = canKill;
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (m_pokemonTeam[i].CurrentHP * 0.75f > m_pokemonTeam[bestPokemon].CurrentHP)
+                                                        {
+                                                            bestPokemon = i;
+                                                            bestPokemonCanKill = canKill;
+                                                        }
                                                     }
                                                 }
                                             }
-                                        }
-                                    }
-                                }//Can kill is correct
-                                else
-                                {
-                                    if (m_pokemonTeam[i].CurrentHP >= m_pokemonTeam[i].MaxHp * 0.5f)
-                                    {
-                                        if (canKill)
-                                        {
-                                            bestPokemon = i;
-                                            bestPokemonCanKill = canKill;
-                                        }
-                                        else
-                                        {
-                                            if (m_pokemonTeam[i].Speed >= CombatManager.Instance.Player.CurrentPokemonPicked.Speed
-                                                && m_pokemonTeam[i].Speed > m_pokemonTeam[bestPokemon].Speed)
-                                            {
-                                                bestPokemon = i;
-                                                bestPokemonCanKill = canKill;
-                                            }
                                             else if (m_pokemonTeam[i].Speed >= CombatManager.Instance.Player.CurrentPokemonPicked.Speed
-                                                && m_pokemonTeam[i].Speed < m_pokemonTeam[bestPokemon].Speed)
+                                                && m_pokemonTeam[bestPokemon].Speed < CombatManager.Instance.Player.CurrentPokemonPicked.Speed)
                                             {
-                                                if (m_pokemonTeam[i].CurrentHP > m_pokemonTeam[bestPokemon].CurrentHP)
+                                                if (m_pokemonTeam[i].CurrentHP >= m_pokemonTeam[i].MaxHp * 0.5f)
                                                 {
                                                     bestPokemon = i;
                                                     bestPokemonCanKill = canKill;
                                                 }
                                             }
-                                            else if (m_pokemonTeam[i].Speed <= CombatManager.Instance.Player.CurrentPokemonPicked.Speed)
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if (canKill)
+                                    {
+                                        bestPokemon = i;
+                                        bestPokemonCanKill = canKill;
+                                    }
+                                    else
+                                    {
+                                        if (m_pokemonTeam[i].Speed >= CombatManager.Instance.Player.CurrentPokemonPicked.Speed
+                                            && m_pokemonTeam[i].Speed >= CombatManager.Instance.Player.CurrentPokemonPicked.Speed)
+                                        {
+                                            if (m_pokemonTeam[i].Type != m_pokemonTeam[bestPokemon].Type)
                                             {
-                                                if (m_pokemonTeam[i].Type != m_pokemonTeam[bestPokemon].Type)
+                                                if (m_pokemonTeam[bestPokemon].Type == CurrentPokemonPicked.Type)
                                                 {
-                                                    if (m_pokemonTeam[i].CurrentHP * 1.5f > m_pokemonTeam[bestPokemon].CurrentHP)
+                                                    if (m_pokemonTeam[i].CurrentHP * 1.5f > m_pokemonTeam[bestPokemon].CurrentHP * 0.75f)
                                                     {
                                                         bestPokemon = i;
                                                         bestPokemonCanKill = canKill;
@@ -422,12 +554,82 @@ namespace CleverCrow.Fluid.BTs.Samples
                                                 }
                                                 else
                                                 {
+                                                    if (m_pokemonTeam[i].CurrentHP * 1.5f > m_pokemonTeam[bestPokemon].CurrentHP)
+                                                    {
+                                                        bestPokemon = i;
+                                                        bestPokemonCanKill = canKill;
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (m_pokemonTeam[bestPokemon].Type == CurrentPokemonPicked.Type)
+                                                {
                                                     if (m_pokemonTeam[i].CurrentHP > m_pokemonTeam[bestPokemon].CurrentHP)
                                                     {
                                                         bestPokemon = i;
                                                         bestPokemonCanKill = canKill;
                                                     }
                                                 }
+                                                else
+                                                {
+                                                    if (m_pokemonTeam[i].CurrentHP * 0.75f > m_pokemonTeam[bestPokemon].CurrentHP)
+                                                    {
+                                                        bestPokemon = i;
+                                                        bestPokemonCanKill = canKill;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        else if (m_pokemonTeam[i].Speed < CombatManager.Instance.Player.CurrentPokemonPicked.Speed
+                                            && m_pokemonTeam[bestPokemon].Speed < CombatManager.Instance.Player.CurrentPokemonPicked.Speed)
+                                        {
+                                            if (m_pokemonTeam[i].Type != m_pokemonTeam[bestPokemon].Type)
+                                            {
+                                                if (m_pokemonTeam[bestPokemon].Type == CurrentPokemonPicked.Type)
+                                                {
+                                                    if (m_pokemonTeam[i].CurrentHP * 1.5f > m_pokemonTeam[bestPokemon].CurrentHP * 0.75f)
+                                                    {
+                                                        bestPokemon = i;
+                                                        bestPokemonCanKill = canKill;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    if (m_pokemonTeam[i].CurrentHP * 1.5f > m_pokemonTeam[bestPokemon].CurrentHP)
+                                                    {
+                                                        bestPokemon = i;
+                                                        bestPokemonCanKill = canKill;
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (m_pokemonTeam[bestPokemon].Type == CurrentPokemonPicked.Type)
+                                                {
+                                                    if (m_pokemonTeam[i].CurrentHP > m_pokemonTeam[bestPokemon].CurrentHP)
+                                                    {
+                                                        bestPokemon = i;
+                                                        bestPokemonCanKill = canKill;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    if (m_pokemonTeam[i].CurrentHP * 0.75f > m_pokemonTeam[bestPokemon].CurrentHP)
+                                                    {
+                                                        bestPokemon = i;
+                                                        bestPokemonCanKill = canKill;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        else if (m_pokemonTeam[i].Speed >= CombatManager.Instance.Player.CurrentPokemonPicked.Speed
+                                            && m_pokemonTeam[bestPokemon].Speed < CombatManager.Instance.Player.CurrentPokemonPicked.Speed)
+                                        {
+                                            if (m_pokemonTeam[i].CurrentHP >= m_pokemonTeam[i].MaxHp * 0.5f)
+                                            {
+                                                bestPokemon = i;
+                                                bestPokemonCanKill = canKill;
                                             }
                                         }
                                     }
@@ -464,16 +666,10 @@ namespace CleverCrow.Fluid.BTs.Samples
                                 }
                                 else
                                 {
-                                    if (m_pokemonTeam[i].CurrentHP >= m_pokemonTeam[i].MaxHp * 0.5f)
+                                    if (m_pokemonTeam[i].Speed >= CombatManager.Instance.Player.CurrentPokemonPicked.Speed
+                                        && m_pokemonTeam[i].Speed >= CombatManager.Instance.Player.CurrentPokemonPicked.Speed)
                                     {
-                                        if (m_pokemonTeam[i].Speed >= CombatManager.Instance.Player.CurrentPokemonPicked.Speed
-                                            && m_pokemonTeam[i].Speed > m_pokemonTeam[bestPokemon].Speed)
-                                        {
-                                            bestPokemon = i;
-                                            bestPokemonCanKill = canKill;
-                                        }
-                                        else if (m_pokemonTeam[i].Speed >= CombatManager.Instance.Player.CurrentPokemonPicked.Speed
-                                            && m_pokemonTeam[i].Speed < m_pokemonTeam[bestPokemon].Speed)
+                                        if (m_pokemonTeam[bestPokemon].Type != CurrentPokemonPicked.Type)
                                         {
                                             if (m_pokemonTeam[i].CurrentHP > m_pokemonTeam[bestPokemon].CurrentHP)
                                             {
@@ -481,50 +677,45 @@ namespace CleverCrow.Fluid.BTs.Samples
                                                 bestPokemonCanKill = canKill;
                                             }
                                         }
-                                        else if (m_pokemonTeam[i].Speed <= CombatManager.Instance.Player.CurrentPokemonPicked.Speed)
+                                        else
                                         {
-                                            if (m_pokemonTeam[bestPokemon].Type == CurrentPokemonPicked.Type)
+                                            bestPokemon = i;
+                                            bestPokemonCanKill = canKill;
+                                        }
+                                    }
+                                    else if (m_pokemonTeam[i].Speed < CombatManager.Instance.Player.CurrentPokemonPicked.Speed
+                                        && m_pokemonTeam[bestPokemon].Speed < CombatManager.Instance.Player.CurrentPokemonPicked.Speed)
+                                    {
+                                        if (m_pokemonTeam[bestPokemon].Type != CurrentPokemonPicked.Type)
+                                        {
+                                            if (m_pokemonTeam[i].CurrentHP > m_pokemonTeam[bestPokemon].CurrentHP)
                                             {
-                                                if (m_pokemonTeam[bestPokemon].Type == CurrentPokemonPicked.Type)
-                                                {
-                                                    if (m_pokemonTeam[i].CurrentHP > m_pokemonTeam[bestPokemon].CurrentHP * 0.75f)
-                                                    {
-                                                        bestPokemon = i;
-                                                        bestPokemonCanKill = canKill;
-                                                    }
-                                                }
-                                            }
-                                            else
-                                            {
-                                                if (m_pokemonTeam[i].CurrentHP > m_pokemonTeam[bestPokemon].CurrentHP)
-                                                {
-                                                    bestPokemon = i;
-                                                    bestPokemonCanKill = canKill;
-                                                }
+                                                bestPokemon = i;
+                                                bestPokemonCanKill = canKill;
                                             }
                                         }
+                                        else
+                                        {
+                                            bestPokemon = i;
+                                            bestPokemonCanKill = canKill;
+                                        }
+                                    }
+                                    else if (m_pokemonTeam[i].Speed >= CombatManager.Instance.Player.CurrentPokemonPicked.Speed
+                                        && m_pokemonTeam[bestPokemon].Speed < CombatManager.Instance.Player.CurrentPokemonPicked.Speed)
+                                    {
+                                        bestPokemon = i;
+                                        bestPokemonCanKill = canKill;
                                     }
                                 }
                             }
                             else
                             {
-                                if (m_pokemonTeam[i].CurrentHP >= m_pokemonTeam[i].MaxHp * 0.5f)
+                                if (!canKill)
                                 {
-                                    if (canKill)
+                                    if (m_pokemonTeam[i].Speed >= CombatManager.Instance.Player.CurrentPokemonPicked.Speed
+                                        && m_pokemonTeam[i].Speed >= CombatManager.Instance.Player.CurrentPokemonPicked.Speed)
                                     {
-                                        bestPokemon = i;
-                                        bestPokemonCanKill = canKill;
-                                    }
-                                    else
-                                    {
-                                        if (m_pokemonTeam[i].Speed >= CombatManager.Instance.Player.CurrentPokemonPicked.Speed
-                                            && m_pokemonTeam[i].Speed > m_pokemonTeam[bestPokemon].Speed)
-                                        {
-                                            bestPokemon = i;
-                                            bestPokemonCanKill = canKill;
-                                        }
-                                        else if (m_pokemonTeam[i].Speed >= CombatManager.Instance.Player.CurrentPokemonPicked.Speed
-                                            && m_pokemonTeam[i].Speed < m_pokemonTeam[bestPokemon].Speed)
+                                        if (m_pokemonTeam[bestPokemon].Type != CurrentPokemonPicked.Type)
                                         {
                                             if (m_pokemonTeam[i].CurrentHP > m_pokemonTeam[bestPokemon].CurrentHP)
                                             {
@@ -532,37 +723,51 @@ namespace CleverCrow.Fluid.BTs.Samples
                                                 bestPokemonCanKill = canKill;
                                             }
                                         }
-                                        else if (m_pokemonTeam[i].Speed <= CombatManager.Instance.Player.CurrentPokemonPicked.Speed)
+                                        else
                                         {
-                                            if (m_pokemonTeam[bestPokemon].Type == CurrentPokemonPicked.Type)
-                                            {
-                                                if (m_pokemonTeam[i].CurrentHP > m_pokemonTeam[bestPokemon].CurrentHP * 0.75f)
-                                                {
-                                                    bestPokemon = i;
-                                                    bestPokemonCanKill = canKill;
-                                                }
-                                            }
-                                            else
-                                            {
-                                                if (m_pokemonTeam[i].CurrentHP > m_pokemonTeam[bestPokemon].CurrentHP)
-                                                {
-                                                    bestPokemon = i;
-                                                    bestPokemonCanKill = canKill;
-                                                }
-                                            }
+                                            bestPokemon = i;
+                                            bestPokemonCanKill = canKill;
                                         }
                                     }
+                                    else if (m_pokemonTeam[i].Speed < CombatManager.Instance.Player.CurrentPokemonPicked.Speed
+                                        && m_pokemonTeam[bestPokemon].Speed < CombatManager.Instance.Player.CurrentPokemonPicked.Speed)
+                                    {
+                                        if (m_pokemonTeam[bestPokemon].Type != CurrentPokemonPicked.Type)
+                                        {
+                                            if (m_pokemonTeam[i].CurrentHP > m_pokemonTeam[bestPokemon].CurrentHP)
+                                            {
+                                                bestPokemon = i;
+                                                bestPokemonCanKill = canKill;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            bestPokemon = i;
+                                            bestPokemonCanKill = canKill;
+                                        }
+                                    }
+                                    else if (m_pokemonTeam[i].Speed >= CombatManager.Instance.Player.CurrentPokemonPicked.Speed
+                                        && m_pokemonTeam[bestPokemon].Speed < CombatManager.Instance.Player.CurrentPokemonPicked.Speed)
+                                    {
+                                        bestPokemon = i;
+                                        bestPokemonCanKill = canKill;
+                                    }
+                                }
+                                else
+                                {
+                                    continue;
                                 }
                             }
                         }
                     }
                 }
-
             }
-            if (bestPokemon != -1)
+            Debug.LogError(bestPokemon);
+            if (bestPokemon == -1)
             {
                 return false;
             }
+            m_currentCDCambiar = m_cooldownCambiar;
             return true;
         }
 
@@ -598,6 +803,7 @@ namespace CleverCrow.Fluid.BTs.Samples
         }
         private CleverCrow.Fluid.BTs.Tasks.TaskStatus ChangeToBestPokemon()
         {
+            Debug.LogWarning("Swaping to " + m_pokemonTeam[bestPokemon].Name + ", Current Picked pokemon is " + m_pokemonTeam[bestPokemon].Name);
             if (bestPokemon == -1)
             {
                 return TaskStatus.Failure;
@@ -606,10 +812,10 @@ namespace CleverCrow.Fluid.BTs.Samples
             {
                 return TaskStatus.Failure;
             }
+            Debug.LogError(m_changePokemonAction.name);
             m_changePokemonAction.Pokemon = m_pokemonTeam[bestPokemon];
             ChooseAction(m_changePokemonAction, CombatManager.ActionType.SwapPokemon);
             return TaskStatus.Success;
         }
     }
 }
-
