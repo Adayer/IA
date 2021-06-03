@@ -26,9 +26,8 @@ namespace CleverCrow.Fluid.BTs.Samples
 
         int bestPokemon = -1;
         HealingPotion m_healingPotion;
-        byte m_potions = 1;
-        byte m_currentPotion;
-        byte m_cooldownCambiar = 2;
+        byte m_currentPotion = 1;
+        byte m_cooldownCambiar = 3;
         byte m_currentCDCambiar;
 
 
@@ -37,7 +36,7 @@ namespace CleverCrow.Fluid.BTs.Samples
             HealingPotion.OnPotionUsed += () => m_currentPotion--;
             m_changePokemonAction = this.GetComponent<ChangePokemon>();
             m_healingPotion = this.GetComponent<HealingPotion>();
-            m_currentPotion = m_potions;
+            m_currentPotion = 1;
 
             _trainerIA = new BehaviorTreeBuilder(gameObject)
             .Selector()
@@ -233,8 +232,10 @@ namespace CleverCrow.Fluid.BTs.Samples
 
         private bool CheckIfHasHealingItems()
         {
+            print(m_currentPotion);
             if(m_currentPotion > 0)
             {
+                Debug.LogError("I could heal");
                 return true;
             }
             return false;

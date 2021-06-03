@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using TMPro;
+using CleverCrow.Fluid.BTs.Samples;
 
 public class HealingPotion : ActionParent, Interfaces.IConsumible
 {
@@ -12,8 +13,11 @@ public class HealingPotion : ActionParent, Interfaces.IConsumible
 
     private void Start()
     {
-        GetComponent<Button>().onClick.AddListener(() => CombatManager.Instance.Player.ChooseAction(this, CombatManager.ActionType.UseItem)/*StartCoroutine(Effect(CombatManager.Instance.Player))*/);
-        GetComponentInChildren<TextMeshProUGUI>().text = "Use healing potion (" + CombatManager.Instance.Player.Potions + " left)";
+        if (this.GetComponent<EnemyTrainerIA>() == null)
+        {
+            GetComponent<Button>().onClick.AddListener(() => CombatManager.Instance.Player.ChooseAction(this, CombatManager.ActionType.UseItem)/*StartCoroutine(Effect(CombatManager.Instance.Player))*/);
+            GetComponentInChildren<TextMeshProUGUI>().text = "Use healing potion (" + CombatManager.Instance.Player.Potions + " left)";
+        }
     }
     public override IEnumerator Effect(TrainerParent trainer)
     {
