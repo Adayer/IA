@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Slaking
   _type: 3
-  _maxHp: 90
-  _attack: 150
-  _defense: 80
-  _spAtt: 150
-  _spDef: 80
-  _speed: 120
+  _maxHp: 504
+  _attack: 460
+  _defense: 237
+  _spAtt: 203
+  _spDef: 166
+  _speed: 236
   _sprite: {fileID: 21300000, guid: 7d5537d30ca637d4e9360ea0fefc9461, type: 3}
   _sprite2: {fileID: 21300000, guid: 51705dec0d809cb4d869bc522108b01c, type: 3}
   _tm0: {fileID: 11400000, guid: 3f2ad7ea814812e4e856f1b763bdc730, type: 2}

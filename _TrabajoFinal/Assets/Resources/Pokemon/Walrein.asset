@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Walrein
   _type: 1
-  _maxHp: 90
-  _attack: 150
-  _defense: 80
-  _spAtt: 150
-  _spDef: 80
-  _speed: 120
+  _maxHp: 424
+  _attack: 197
+  _defense: 279
+  _spAtt: 226
+  _spDef: 216
+  _speed: 166
   _sprite: {fileID: 21300000, guid: 00d5010402aa2f7409131ea5817b1196, type: 3}
   _sprite2: {fileID: 21300000, guid: 315e97ed4c8a75b48ac473092b35e634, type: 3}
   _tm0: {fileID: 11400000, guid: e3d652a3836e5764284d6c63d527e69b, type: 2}

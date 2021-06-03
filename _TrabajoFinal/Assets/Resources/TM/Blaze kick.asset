@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Blaze kick
   m_EditorClassIdentifier: 
   _tipoDeAtaque: 0
-  "_tipoDeDa\xF1o": 1
-  _accuracy: 100
+  "_tipoDeDa\xF1o": 0
+  _accuracy: 90
   _critChance: 1
-  _damage: 10
+  _damage: 85
   _name: Blaze kick

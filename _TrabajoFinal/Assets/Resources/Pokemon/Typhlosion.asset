@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Typhlosion
   _type: 0
-  _maxHp: 90
-  _attack: 150
-  _defense: 80
-  _spAtt: 150
-  _spDef: 80
-  _speed: 120
+  _maxHp: 297
+  _attack: 183
+  _defense: 192
+  _spAtt: 317
+  _spDef: 207
+  _speed: 328
   _sprite: {fileID: 21300000, guid: 340267573929b7549826661c745a3a52, type: 3}
   _sprite2: {fileID: 21300000, guid: 9ccfd7b883477664a9a0024c3b7de2dc, type: 3}
   _tm0: {fileID: 11400000, guid: 3f2ad7ea814812e4e856f1b763bdc730, type: 2}

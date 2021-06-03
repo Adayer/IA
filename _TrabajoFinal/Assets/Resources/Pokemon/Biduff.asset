@@ -14,15 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Biduff
   _type: 3
-  _maxHp: 90
-  _attack: 150
-  _defense: 80
-  _spAtt: 150
-  _spDef: 80
-  _speed: 120
+  _maxHp: 381
+  _attack: 372
+  _defense: 277
+  _spAtt: 248
+  _spDef: 276
+  _speed: 339
   _sprite: {fileID: 21300000, guid: 48849440fc40c0840991fd382b31cdd0, type: 3}
   _sprite2: {fileID: 21300000, guid: 63b09bda7b770e145b5fca99a72d8ddc, type: 3}
   _tm0: {fileID: 11400000, guid: 3f2ad7ea814812e4e856f1b763bdc730, type: 2}
   _tm1: {fileID: 11400000, guid: 5ab3ea376bd07ec4ba44164298e89814, type: 2}
-  _tm2: {fileID: 11400000, guid: 05d0b96442e3a7d4fb62fdcf1fa01527, type: 2}
-  _tm3: {fileID: 11400000, guid: e3d652a3836e5764284d6c63d527e69b, type: 2}
+  _tm2: {fileID: 11400000, guid: 9a9d08bfa85bb284786fe504c744815b, type: 2}
+  _tm3: {fileID: 11400000, guid: 05d0b96442e3a7d4fb62fdcf1fa01527, type: 2}

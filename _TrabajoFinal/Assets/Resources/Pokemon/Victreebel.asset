@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Victreebel
   _type: 2
-  _maxHp: 90
-  _attack: 150
-  _defense: 80
-  _spAtt: 150
-  _spDef: 80
-  _speed: 120
+  _maxHp: 364
+  _attack: 339
+  _defense: 166
+  _spAtt: 212
+  _spDef: 177
+  _speed: 176
   _sprite: {fileID: 21300000, guid: cd679be03cb93cb46a0699984adf9c61, type: 3}
   _sprite2: {fileID: 21300000, guid: 4c8f531ae5894d64189e8f0844274e34, type: 3}
   _tm0: {fileID: 11400000, guid: 3f2ad7ea814812e4e856f1b763bdc730, type: 2}

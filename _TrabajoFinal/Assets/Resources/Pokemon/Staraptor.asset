@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Staraptor
   _type: 3
-  _maxHp: 90
-  _attack: 150
-  _defense: 80
-  _spAtt: 150
-  _spDef: 80
-  _speed: 120
+  _maxHp: 311
+  _attack: 339
+  _defense: 177
+  _spAtt: 122
+  _spDef: 156
+  _speed: 328
   _sprite: {fileID: 21300000, guid: 09924c8e3de9ff74d849001780d7a57d, type: 3}
   _sprite2: {fileID: 21300000, guid: faa93edff54a87b4bab09c6f801c08b4, type: 3}
   _tm0: {fileID: 11400000, guid: 3f2ad7ea814812e4e856f1b763bdc730, type: 2}

@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Roserade
   _type: 2
-  _maxHp: 90
-  _attack: 150
-  _defense: 80
-  _spAtt: 150
-  _spDef: 80
-  _speed: 120
+  _maxHp: 261
+  _attack: 130
+  _defense: 166
+  _spAtt: 383
+  _spDef: 309
+  _speed: 217
   _sprite: {fileID: 21300000, guid: 8b65da1dad8e3ce4f8df9a78c119f242, type: 3}
   _sprite2: {fileID: 21300000, guid: 4cffc67603689e346818809c4d8bb872, type: 3}
   _tm0: {fileID: 11400000, guid: 3f2ad7ea814812e4e856f1b763bdc730, type: 2}

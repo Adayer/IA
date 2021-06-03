@@ -16,5 +16,5 @@ MonoBehaviour:
   "_tipoDeDa\xF1o": 1
   _accuracy: 100
   _critChance: 1
-  _damage: 10
+  _damage: 80
   _name: Surf

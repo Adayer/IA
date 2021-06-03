@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Quagsire
   _type: 1
-  _maxHp: 90
-  _attack: 150
-  _defense: 80
-  _spAtt: 150
-  _spDef: 80
-  _speed: 120
+  _maxHp: 332
+  _attack: 206
+  _defense: 295
+  _spAtt: 149
+  _spDef: 229
+  _speed: 106
   _sprite: {fileID: 21300000, guid: 594e920346a45de4196ac597ec4b992b, type: 3}
   _sprite2: {fileID: 21300000, guid: 632cc84312d855847b2afe9f8d611e0b, type: 3}
   _tm0: {fileID: 11400000, guid: 47b6378f7264a624683a505ef612375a, type: 2}
