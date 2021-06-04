@@ -22,7 +22,7 @@ MonoBehaviour:
   _speed: 176
   _sprite: {fileID: 21300000, guid: cd679be03cb93cb46a0699984adf9c61, type: 3}
   _sprite2: {fileID: 21300000, guid: 4c8f531ae5894d64189e8f0844274e34, type: 3}
-  _tm0: {fileID: 11400000, guid: 3f2ad7ea814812e4e856f1b763bdc730, type: 2}
+  _tm0: {fileID: 11400000, guid: e3d652a3836e5764284d6c63d527e69b, type: 2}
   _tm1: {fileID: 11400000, guid: 63ce6c2e1e61fa940bee86a380fef1ee, type: 2}
-  _tm2: {fileID: 11400000, guid: 05d0b96442e3a7d4fb62fdcf1fa01527, type: 2}
-  _tm3: {fileID: 11400000, guid: 30b9ebfd272755d40b70c8380bab8701, type: 2}
+  _tm2: {fileID: 11400000, guid: d1323a0f7cfa2fd4a81e02ae92836d89, type: 2}
+  _tm3: {fileID: 11400000, guid: 5ab3ea376bd07ec4ba44164298e89814, type: 2}

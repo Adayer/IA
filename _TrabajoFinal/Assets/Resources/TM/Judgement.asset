@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b50b03a70adffb644b0af23a6e1f8fb8, type: 3}
   m_Name: Judgement
   m_EditorClassIdentifier: 
-  _tipoDeAtaque: 0
+  _tipoDeAtaque: 3
   "_tipoDeDa\xF1o": 0
   _accuracy: 100
   _critChance: 0
