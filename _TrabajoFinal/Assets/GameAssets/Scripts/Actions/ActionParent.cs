@@ -5,10 +5,8 @@ using UnityEngine;
 public abstract class ActionParent : MonoBehaviour
 {
     [SerializeField] protected CombatManager.ActionType tipoAccion;
-    public void Act()
-    {
-        CombatManager.Instance.Player.ChooseAction(this, tipoAccion);        
-    }
+    public abstract void Act();
+    
 
     public abstract IEnumerator Effect(TrainerParent trainer);
 }

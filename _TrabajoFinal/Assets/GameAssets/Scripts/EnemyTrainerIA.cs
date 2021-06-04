@@ -32,8 +32,7 @@ namespace CleverCrow.Fluid.BTs.Samples
 
 
         private void Awake()
-        {
-            HealingPotion.OnPotionUsed += () => m_currentPotion--;
+        {            
             m_changePokemonAction = this.GetComponent<ChangePokemon>();
             m_healingPotion = this.GetComponent<HealingPotion>();
             m_currentPotion = 1;
@@ -309,7 +308,7 @@ namespace CleverCrow.Fluid.BTs.Samples
 
             bestPokemon = -1;
 
-            Debug.LogError(CurrentPokemonPicked.Type);
+            //Debug.LogError(CurrentPokemonPicked.Type);
 
             for (int i = 0; i < m_pokemonTeam.Count; i++)
             {
@@ -768,7 +767,7 @@ namespace CleverCrow.Fluid.BTs.Samples
                     }
                 }
             }
-            Debug.LogError(bestPokemon);
+            //Debug.LogError(bestPokemon);
             if (bestPokemon == -1)
             {
                 return false;
@@ -820,7 +819,7 @@ namespace CleverCrow.Fluid.BTs.Samples
             {
                 return TaskStatus.Failure;
             }
-            Debug.LogError(m_changePokemonAction.name);
+            //Debug.LogError(m_changePokemonAction.name);
             m_changePokemonAction.Pokemon = m_pokemonTeam[bestPokemon];
             ChooseAction(m_changePokemonAction, CombatManager.ActionType.SwapPokemon);
             return TaskStatus.Success;

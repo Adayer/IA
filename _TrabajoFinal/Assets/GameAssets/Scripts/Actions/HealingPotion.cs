@@ -8,7 +8,7 @@ using CleverCrow.Fluid.BTs.Samples;
 
 public class HealingPotion : ActionParent, Interfaces.IConsumible
 {
-    public static Action OnPotionUsed;
+    public static Action OnPlayerUsedPotion;
     public static Action OnIAPotionUsed;
 
     private void Start()
@@ -37,7 +37,7 @@ public class HealingPotion : ActionParent, Interfaces.IConsumible
         if (trainer is PlayerTrainer)
         {
             CombatManager.Instance.Player.CurrentPokemonPicked.Heal(9999);
-            OnPotionUsed?.Invoke();
+            OnPlayerUsedPotion?.Invoke();
             GetComponentInChildren<TextMeshProUGUI>().text = "Use healing potion (" + CombatManager.Instance.Player.Potions + " left)";
         }
         else
@@ -45,5 +45,11 @@ public class HealingPotion : ActionParent, Interfaces.IConsumible
             CombatManager.Instance.Enemy.CurrentPokemonPicked.Heal(9999);
             OnIAPotionUsed?.Invoke();
         }
+    }
+
+    public override void Act()
+    {
+        CombatManager.Instance.Player.ChooseAction(this, tipoAccion);
+        print("Used healing potion.");
     }
 }

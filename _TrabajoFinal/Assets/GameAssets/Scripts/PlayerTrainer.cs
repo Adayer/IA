@@ -17,7 +17,7 @@ public class PlayerTrainer : TrainerParent
     public override void Initialize(List<SOPokemonStats> pokemonStats)
     {
         base.Initialize(pokemonStats);
-        HealingPotion.OnPotionUsed += () => m_potions--;
+        HealingPotion.OnPlayerUsedPotion += () => m_potions--;
         LinkTMButtonsToEvents();
         LinkPokemonChangeButtons();
         OnInitializePlayer?.Invoke();
@@ -183,6 +183,6 @@ public class PlayerTrainer : TrainerParent
     }
     private void OnDisable()
     {
-        HealingPotion.OnPotionUsed -= () => m_potions--;
+        HealingPotion.OnPlayerUsedPotion -= () => m_potions--;
     }
 }

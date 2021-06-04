@@ -19,6 +19,11 @@ public class TMParent : ActionParent
     public int Damage { get => m_damage; set => m_damage = value; }
     public AppConstants.TipoDaño TipoDeDaño { get => m_tipoDeDaño; set => m_tipoDeDaño = value; }
 
+    public override void Act()
+    {
+        CombatManager.Instance.Player.ChooseAction(this, tipoAccion);
+        Debug.Log("Chose to make an attack");
+    }
     public override IEnumerator Effect(TrainerParent attacker)
     {
         print(attacker.CurrentPokemonPicked + " utilizó " + m_name);

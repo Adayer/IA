@@ -43,4 +43,10 @@ public class ChangePokemon : ActionParent
             ((PlayerTrainer)trainer).UpdatePokemonTeam();
         }
     }
+
+    public override void Act()
+    {
+        CombatManager.Instance.Player.ChooseAction(this, tipoAccion);
+        Debug.LogWarning("Cambiando de pokémon");
+    }
 }
